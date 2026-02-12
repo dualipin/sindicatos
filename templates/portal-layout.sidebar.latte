@@ -1,0 +1,81 @@
+{var App\Models\Sindicato\Sindicato $sindicato = $sindicatoActual()}
+<!-- Sidebar: Offcanvas on mobile, fixed on desktop -->
+<div class="offcanvas-lg offcanvas-start bg-primary text-white" tabindex="-1" id="sidebarMenu"
+  aria-labelledby="sidebarMenuLabel" style="width: 280px;">
+
+  <!-- Offcanvas Header (Mobile only) -->
+  <div class="offcanvas-header border-bottom border-secondary d-lg-none">
+    <h5 class="offcanvas-title" id="sidebarMenuLabel">
+      <img src="{resolveUploadUrl($sindicato?->logo)}" alt="logo" width="24" height="24" class="me-2 rounded-circle object-fit-cover">
+      {$sindicato?->abreviacion}
+    </h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu"
+      aria-label="Close"></button>
+  </div>
+
+  <!-- Sidebar Body -->
+  <div class="offcanvas-body p-0 d-flex flex-column">
+    <!-- Brand (Desktop only) -->
+    <div class="d-none d-lg-block p-3 border-bottom border-secondary">
+      <a href="/aplicacion/index.php" class="d-flex align-items-center text-white text-decoration-none">
+        <img src="{resolveUploadUrl($sindicato?->logo)}" alt="logo" width="50" height="50" class="object-fit-cover me-2 rounded-circle">
+        <span class="fs-5 fw-bold">{$sindicato?->nombre}</span>
+      </a>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="flex-grow-1 overflow-auto">
+      <ul class="nav flex-column py-3">
+        <!-- Inicio -->
+        <li class="nav-item" data-aos="fade-right" data-aos-delay="100">
+          <a href="/aplicacion/index.php" class="nav-link text-white rounded mx-2 mb-1">
+            <i class="bi bi-house me-2"></i>
+            <span>Inicio</span>
+          </a>
+        </li>
+
+        <!-- Avisos -->
+        <li class="nav-item" data-aos="fade-right" data-aos-delay="200">
+          <a href="/aplicacion/avisos/index.php" class="nav-link text-white-50 rounded mx-2 mb-1">
+            <i class="bi bi-bell me-2"></i>
+            <span>Avisos</span>
+          </a>
+        </li>
+
+        <!-- Noticias -->
+        <li class="nav-item" data-aos="fade-right" data-aos-delay="300">
+          <a href="/aplicacion/noticias/index.php" class="nav-link text-white-50 rounded mx-2 mb-1">
+            <i class="bi bi-newspaper me-2"></i>
+            <span>Noticias</span>
+          </a>
+        </li>
+
+        <!-- Gestiones -->
+        <li class="nav-item" data-aos="fade-right" data-aos-delay="400">
+          <a href="/aplicacion/gestiones/index.php" class="nav-link text-white-50 rounded mx-2 mb-1">
+            <i class="bi bi-file-earmark-bar-graph-fill me-2"></i>
+            <span>Gestiones</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<style>
+  /* Fixed sidebar on desktop - required for layout */
+  @media (min-width: 992px) {
+    #sidebarMenu {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    /* Adjust main content to account for fixed sidebar */
+    .row.g-0>.col {
+      margin-left: 280px;
+    }
+  }
+</style>

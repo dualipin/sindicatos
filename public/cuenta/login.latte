@@ -1,70 +1,75 @@
 {extends ../../templates/auth-layout.latte}
 
 {block main}
-<img src="/assets/images/logo.webp"
-  class="img-fluid position-absolute top-0 start-50 translate-middle-x mt-3 rounded-circle animate__animated animate__fadeIn" alt="Logo"
-  style="height: 100px; z-index: 10;">
+  <div class="position-relative d-flex justify-content-center align-items-center">
+    <img src="/assets/images/logo.webp"
+         class="img-fluid rounded-circle mb-4 animate__animated animate__fadeInDown"
+         alt="Logo"
+         style="height: 100px;">
+  </div>
 
-<section class="d-flex align-items-center h-100 flex-grow-1">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-10">
-        <div class="login-container animate__animated animate__fadeInDown animate__faster">
-          <div class="row g-0">
-            <!-- Imagen (visible en md+) -->
-            <div class="col-md-6 d-none d-md-flex bg-light">
-              {* {include file '../index__carrusel.latte'} *}
+  <section class="d-flex align-items-center flex-grow-1">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10">
+          <div class="login-container animate__animated animate__fadeInDown animate__faster">
+            <div class="row g-0">
+              <!-- Imagen (visible en md+) -->
+              <div class="col-md-6 d-none d-md-flex bg-light">
+                {* {include file '../index__carrusel.latte'} *}
 {*              Espacio para carousel*}
-            </div>
-            <!-- Formulario -->
-            <div class="col-12 col-md-6 p-4 p-md-5 bg-body">
-              <div class="text-center mb-4 mt-3 mt-lg-0">
-                <h3 class="fw-bold">Bienvenido</h3>
-                <p class="text-muted">Ingresa tus credenciales para continuar</p>
               </div>
-              <form method="post">
-                <input type="hidden" name="redirect" value="{$redirect}">
-                <!-- Email -->
-                <div class="mb-4">
-                  <label class="form-label" for="form3Example3">Correo electrónico</label>
-                  <div class="input-group input-group-lg">
-                    <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
-                    <input name="email" type="email" value="{$email?:''}" id="form3Example3"
-                      class="form-control" placeholder="correo@correo.com" required />
+              <!-- Formulario -->
+              <div class="col-12 col-md-6 p-4 p-md-5 bg-body">
+                <div class="text-center mb-4 mt-3 mt-lg-0">
+                  <h3 class="fw-bold">Bienvenido</h3>
+                  <p class="text-muted">Ingresa tus credenciales para continuar</p>
+                </div>
+                <form method="post">
+                  <input type="hidden" name="redirect" value="{$redirect}">
+                  <!-- Email -->
+                  <div class="mb-4">
+                    <label class="form-label" for="form3Example3">Correo electrónico</label>
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+                      <input name="email" type="email" value="{$email?:''}" id="form3Example3"
+                             class="form-control" placeholder="correo@correo.com" required/>
+                    </div>
                   </div>
-                </div>
-                <!-- Password -->
-                <div class="mb-4">
-                  <label class="form-label" for="form3Example4">Contraseña</label>
-                  <div class="input-group input-group-lg">
-                    <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
-                    <input name="password" type="password" id="form3Example4" class="form-control"
-                      placeholder="*****" required />
+                  <!-- Password -->
+                  <div class="mb-4">
+                    <label class="form-label" for="form3Example4">Contraseña</label>
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+                      <input name="password" type="password" id="form3Example4" class="form-control"
+                             placeholder="*****" required/>
+                    </div>
                   </div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                  <a href="/cuenta/recuperar-contra.php" class="forgot-link">¿Olvidaste tu contraseña?</a>
-                </div>
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary btn-lg w-100 mb-3 animate__animated animate__pulse animate__faster">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
-                  </button>
-                  <a href="/"
-                    class="btn btn-secondary w-100 mb-3 d-flex align-items-center justify-content-center gap-2">
-                    <i class="bi bi-house-door-fill"></i>
-                    Volver al Inicio
-                  </a>
-                  {if $error}
-                  <div class="alert alert-danger small animate__animated animate__shakeX animate__faster" role="alert">
-                    <i class="bi bi-exclamation-triangle me-2"></i>{$error}
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <a href="/cuenta/recuperar-contra.php" class="forgot-link">¿Olvidaste tu contraseña?</a>
                   </div>
-                  {/if}
-                </div>
-              </form>
+                  <div class="text-center">
+                    <button type="submit"
+                            class="btn btn-primary btn-lg w-100 mb-3 animate__animated animate__pulse animate__faster">
+                      <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                    </button>
+                    <a href="/"
+                       class="btn btn-secondary w-100 mb-3 d-flex align-items-center justify-content-center gap-2">
+                      <i class="bi bi-house-door-fill"></i>
+                      Volver al Inicio
+                    </a>
+                    {if $error}
+                      <div class="alert alert-danger small animate__animated animate__shakeX animate__faster"
+                           role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>{$error}
+                      </div>
+                    {/if}
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 {/block}

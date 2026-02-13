@@ -3,14 +3,16 @@
 declare(strict_types=1);
 
 
+use App\Bootstrap;
 use App\Http\Controller\Auth\LoginController;
 use App\Infrastructure\Session\SessionManager;
 use App\Infrastructure\Templating\RendererInterface;
 use App\Shared\View\SindicatoViewContextProvider;
 use DI\Container;
 
-/** @var Container $container */
-$container = require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
+
+$container = Bootstrap::buildContainer();
 
 /** @var SessionManager $session */
 $session = $container->get(SessionManager::class);

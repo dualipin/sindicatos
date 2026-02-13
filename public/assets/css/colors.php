@@ -131,8 +131,9 @@ if (!function_exists('lightenDarkenColor')) {
 // CARGA DE CONFIGURACIÓN
 // ============================================================================
 
-/* @var DI\Container $c */
-$c = require_once __DIR__ . '/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
+
+$c = \App\Bootstrap::buildContainer();
 
 /* @var ObtenerColoresSindicatoController $coloresController */
 $coloresController = $c->get(ObtenerColoresSindicatoController::class);

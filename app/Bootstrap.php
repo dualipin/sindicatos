@@ -3,6 +3,7 @@
 namespace App;
 
 use DI\ContainerBuilder;
+use Dotenv\Dotenv;
 use Psr\Container\ContainerInterface;
 
 final class Bootstrap
@@ -19,7 +20,6 @@ final class Bootstrap
 
     private static function build(): ContainerInterface
     {
-        require_once __DIR__ . '/../vendor/autoload.php';
 
         $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
         $dotenv->safeLoad();

@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
+use App\Bootstrap;
 use App\Infrastructure\Session\SessionManager;
 use App\Infrastructure\Templating\RendererInterface;
 use App\Shared\View\LandingViewContextProvider;
-use Psr\Container\ContainerInterface;
 
+ require_once __DIR__ . '/../bootstrap.php';
 
-/** @var ContainerInterface $container */
-$container = require_once __DIR__ . '/../bootstrap.php';
-
+$container = Bootstrap::buildContainer();
 
 $session = $container->get(SessionManager::class);
 $session->start();

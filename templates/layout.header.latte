@@ -28,11 +28,10 @@
           {foreach $sindicatos as $sindicatoItem}
             <li class="dropdown-item">
               <form method="post" action="{resolveUrl('establecer-sindicato.php')}">
-                <input type="hidden" name="sindicatoId" value="{$sindicatoItem->id}">
+                <input type="hidden" name="id" value="{$sindicatoItem->id}">
                 <button type="submit" class="dropdown-item">
                   <span class="d-none d-lg-block">{$sindicatoItem->nombre}</span>
                   <span class="d-block d-lg-none">{$sindicatoItem->abreviacion}</span>
-
                 </button>
               </form>
             </li>

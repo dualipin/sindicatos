@@ -1,8 +1,7 @@
 <?php
 
 use App\Bootstrap;
-use App\Http\Response\Redirector;
-use App\Shared\Context\TenantContext;
+use App\Http\Controller\Sindicatos\EstablecerSindicatoController;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -13,12 +12,5 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$context = $container->get(TenantContext::class);
-
-$id = $_POST['id'];
-
-$context->setSyndicateId($id);
-
-$redirect = $container->get(Redirector::class);
-
-$redirect->to('/', ['id' => $id])->send();
+$controller = $container->get(EstablecerSindicatoController::class);
+$controller->handle($_POST);

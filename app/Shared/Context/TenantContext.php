@@ -4,27 +4,27 @@ namespace App\Shared\Context;
 
 final readonly class TenantContext
 {
-    private const string SYNDICATE_ID_KEY = 'syndicate_id';
-    private const string USER_ID_KEY = 'user_id';
+    private const string SindicateIdKey = 'syndicate_id';
+    private const string UserIdKey = 'user_id';
 
     public function getSyndicateId(): int
     {
-        return $_SESSION[self::SYNDICATE_ID_KEY] ?? 1;
+        return $_SESSION[self::SindicateIdKey] ?? 1;
     }
 
     public function setSyndicateId(int $syndicateId): void
     {
-        $_SESSION[self::SYNDICATE_ID_KEY] = $syndicateId;
+        $_SESSION[self::SindicateIdKey] = $syndicateId;
     }
 
     public function getUserId(): ?string
     {
-        return $_SESSION[self::USER_ID_KEY] ?? null;
+        return $_SESSION[self::UserIdKey] ?? null;
     }
 
     public function setUserId(string $userId): void
     {
-        $_SESSION[self::USER_ID_KEY] = $userId;
+        $_SESSION[self::UserIdKey] = $userId;
     }
 
 }

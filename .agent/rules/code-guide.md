@@ -2,20 +2,30 @@
 trigger: always_on
 ---
 
-- resuelve e importa siempre `bootstrap.php`
-- si necesitas hacer algo con la base de datos consulta el esquema en `database.sql` y use dbhub (mcp)
-- si necesitas informacion sobre la documentacion de alguna libreria o lenguaje use context7 (mcp)
+## Reglas del proyecto
 
-## Relativo a la UI/UX
+- Siempre resuelve e importa `bootstrap.php` al inicio de cada archivo de entrada en `public/`.
+- Para cualquier operación con base de datos, consulta primero el esquema en `database.sql` y usa **dbhub** (MCP).
+- Para documentación de librerías o lenguajes, usa **context7** (MCP).
 
-- Solo clases de BOOTSTRAP 5
-- Prohibido estilos inline
-- PROHIBIDO crear nuevas clases/estilos. Solo si bootstrap no lo cubre.
+### UI/UX
 
-## Relativo a la arquitectura
+- Usa exclusivamente clases de Bootstrap 5.
+- Prohibido usar estilos inline.
+- Prohibido crear clases o estilos personalizados, salvo que Bootstrap no cubra el caso. En ese supuesto, añade un comentario documentando el motivo.
 
-usa una solucion profesional respetando una arquitectura que separe las capas claramente.
+### Arquitectura
 
-## Relativo a la ejecucion
+El proyecto sigue una arquitectura de capas con la siguiente estructura:
 
-El proyecto se esta ejecutando con pondman, tomalo en cuenta y consulta `compose.yaml`
+- `public/` contiene únicamente los puntos de entrada. Su única responsabilidad es resolver el contenedor, iniciar sesión si aplica, y delegar al controlador correspondiente. No debe contener lógica de negocio ni conocer la estructura interna de la aplicación.
+- `App\Http\Controller` contiene los controladores. Orquestan el flujo HTTP: leen input, invocan servicios y renderizan o redirigen. No contienen lógica de negocio.
+- `App\Module\*\Service` contiene la lógica de negocio. No conoce HTTP, sesiones ni templates.
+- `App\Module\*\Repository` es la única capa que interactúa con la base de datos.
+- `App\Infrastructure` contiene implementaciones técnicas como el renderer, sesión y configuración.
+
+Antes de implementar cualquier funcionalidad nueva, pregunta si no tienes claro en qué capa corresponde o si existe ya un servicio o repositorio que resuelva la necesidad.
+
+### Ejecución
+
+El proyecto corre con **Podman**. Antes de asumir configuración de servicios, puertos o variables de entorno, consulta `compose.yaml`.

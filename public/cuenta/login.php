@@ -22,8 +22,12 @@ $redirectTo = $_GET["redirect_to"] ?? ($_POST["redirect"] ?? "/");
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"] ?? "";
     $password = $_POST["password"] ?? "";
-    $controller->login($email, $password, $redirectTo);
+    $controller->login(
+        (string) $email,
+        (string) $password,
+        (string) $redirectTo,
+    );
 } else {
     $error = $_GET["error"] ?? null;
-    $controller->showLoginForm($redirectTo, $error);
+    $controller->showLoginForm((string) $redirectTo, (string) $error);
 }

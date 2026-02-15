@@ -366,9 +366,9 @@ final readonly class SindicatoRepository
             $stmt = $this->pdo->prepare(
                 "SELECT puesto_id FROM sindicato_puestos WHERE sindicato_id = :sindicato_id",
             );
-            $stmt->execute(['sindicato_id' => $sindicatoId]);
+            $stmt->execute(["sindicato_id" => $sindicatoId]);
             $rows = $stmt->fetchAll();
-            $existingIds = array_map(fn($r) => (int)$r['puesto_id'], $rows);
+            $existingIds = array_map(fn($r) => (int) $r["puesto_id"], $rows);
 
             $seen = [];
 
@@ -381,35 +381,38 @@ final readonly class SindicatoRepository
             );
 
             foreach ($puestos as $p) {
-                $id = isset($p['id']) && $p['id'] ? (int)$p['id'] : null;
-                $nombre = trim((string) ($p['nombre'] ?? ''));
-                $orden = (int) ($p['orden'] ?? 0);
+                $id = isset($p["id"]) && $p["id"] ? (int) $p["id"] : null;
+                $nombre = trim((string) ($p["nombre"] ?? ""));
+                $orden = (int) ($p["orden"] ?? 0);
 
-                if ($nombre === '') {
+                if ($nombre === "") {
                     continue; // ignorar entradas vacías
                 }
 
                 if ($id !== null && in_array($id, $existingIds, true)) {
                     $upd->execute([
-                        'id' => $id,
-                        'nombre_puesto' => $nombre,
-                        'orden_jerarquico' => $orden,
+                        "id" => $id,
+                        "nombre_puesto" => $nombre,
+                        "orden_jerarquico" => $orden,
                     ]);
                     $seen[] = $id;
                 } else {
                     $ins->execute([
-                        'sindicato_id' => $sindicatoId,
-                        'nombre_puesto' => $nombre,
-                        'orden_jerarquico' => $orden,
+                        "sindicato_id" => $sindicatoId,
+                        "nombre_puesto" => $nombre,
+                        "orden_jerarquico" => $orden,
                     ]);
-                    $seen[] = (int)$this->pdo->lastInsertId();
+                    $seen[] = (int) $this->pdo->lastInsertId();
                 }
             }
 
             // eliminar los que no fueron enviados
             $toDelete = array_diff($existingIds, $seen);
             if (!empty($toDelete)) {
-                $placeholders = implode(',', array_fill(0, count($toDelete), '?'));
+                $placeholders = implode(
+                    ",",
+                    array_fill(0, count($toDelete), "?"),
+                );
                 $sql = "DELETE FROM sindicato_puestos WHERE puesto_id IN ($placeholders)";
                 $stmt2 = $this->pdo->prepare($sql);
                 $stmt2->execute(array_values($toDelete));
@@ -432,17 +435,17 @@ final readonly class SindicatoRepository
         }
 
         $puestos = [
-            'Secretario General',
-            'Secretario General Suplente',
-            'Secretario de Organización',
-            'Secretario de Trabajos y Conflictos',
-            'Secretario de Finanzas',
-            'Secretario de Actas y Acuerdos',
-            'Presidente de la Comisión de Honor y Justicia',
+            "Secretario General",
+            "Secretario General Suplente",
+            "Secretario de Organización",
+            "Secretario de Trabajos y Conflictos",
+            "Secretario de Finanzas",
+            "Secretario de Actas y Acuerdos",
+            "Presidente de la Comisión de Honor y Justicia",
         ];
 
         $ins = $this->pdo->prepare(
-            'INSERT INTO sindicato_puestos (sindicato_id, nombre_puesto, orden_jerarquico) VALUES (:sindicato_id, :nombre_puesto, :orden_jerarquico)'
+            "INSERT INTO sindicato_puestos (sindicato_id, nombre_puesto, orden_jerarquico) VALUES (:sindicato_id, :nombre_puesto, :orden_jerarquico)",
         );
 
         $this->pdo->beginTransaction();
@@ -450,9 +453,9 @@ final readonly class SindicatoRepository
             $orden = 1;
             foreach ($puestos as $p) {
                 $ins->execute([
-                    'sindicato_id' => $sindicatoId,
-                    'nombre_puesto' => $p,
-                    'orden_jerarquico' => $orden,
+                    "sindicato_id" => $sindicatoId,
+                    "nombre_puesto" => $p,
+                    "orden_jerarquico" => $orden,
                 ]);
                 $orden++;
             }

@@ -56,15 +56,17 @@ final readonly class ConfiguracionSindicatoController
 
         if ($method === "POST") {
             // Importar puestos por defecto (botón en la UI)
-            if (!empty($postData['import_default_puestos'])) {
+            if (!empty($postData["import_default_puestos"])) {
                 try {
                     $this->repository->insertarPuestosPorDefecto($sindicatoId);
                     $this->redirector
-                        ->to('/portal/sindicatos/configuracion.php', ['success' => 'puestos_imported'])
+                        ->to("/portal/sindicatos/configuracion.php", [
+                            "success" => "puestos_imported",
+                        ])
                         ->send();
                     return;
                 } catch (\Throwable $e) {
-                    $error = 'No se pudieron importar los puestos por defecto.';
+                    $error = "No se pudieron importar los puestos por defecto.";
                 }
             }
 
@@ -90,7 +92,7 @@ final readonly class ConfiguracionSindicatoController
                 $error = "Completa el nombre y la abreviacion del sindicato.";
             } elseif ($error === null) {
                 try {
-                            $this->repository->actualizarConfiguracion(
+                    $this->repository->actualizarConfiguracion(
                         $sindicatoId,
                         $nombre,
                         $abreviacion,
@@ -112,20 +114,20 @@ final readonly class ConfiguracionSindicatoController
                     );
 
                     // Procesar metas/valores si vienen en el POST (name="metas[]")
-                    $rawMetas = $postData['metas'] ?? [];
+                    $rawMetas = $postData["metas"] ?? [];
                     $metas = [];
                     if (is_string($rawMetas)) {
                         $lines = preg_split('/\r\n|\r|\n/', $rawMetas);
                         foreach ($lines as $ln) {
                             $v = trim((string) $ln);
-                            if ($v !== '') {
+                            if ($v !== "") {
                                 $metas[] = $v;
                             }
                         }
                     } elseif (is_array($rawMetas)) {
                         foreach ($rawMetas as $m) {
                             $v = trim((string) $m);
-                            if ($v !== '') {
+                            if ($v !== "") {
                                 $metas[] = $v;
                             }
                         }
@@ -137,26 +139,31 @@ final readonly class ConfiguracionSindicatoController
                     }
 
                     // Procesar puestos del comité si vienen en el POST (estructura: puestos[id][], puestos[nombre][], puestos[orden][])
-                    $rawPuestos = $postData['puestos'] ?? null;
+                    $rawPuestos = $postData["puestos"] ?? null;
                     if (is_array($rawPuestos)) {
                         $puestos = [];
 
-                        $ids = $rawPuestos['id'] ?? [];
-                        $nombres = $rawPuestos['nombre'] ?? [];
-                        $ordenes = $rawPuestos['orden'] ?? [];
+                        $ids = $rawPuestos["id"] ?? [];
+                        $nombres = $rawPuestos["nombre"] ?? [];
+                        $ordenes = $rawPuestos["orden"] ?? [];
 
                         $count = count($nombres);
                         for ($i = 0; $i < $count; $i++) {
-                            $nombre = trim((string) ($nombres[$i] ?? ''));
+                            $nombre = trim((string) ($nombres[$i] ?? ""));
 
-                            if ($nombre === '') {
+                            if ($nombre === "") {
                                 continue; // ignorar entradas vacías
                             }
 
                             $puestos[] = [
-                                'id' => isset($ids[$i]) && $ids[$i] !== '' ? (int) $ids[$i] : null,
-                                'nombre' => $nombre,
-                                'orden' => isset($ordenes[$i]) ? (int) $ordenes[$i] : ($i + 1),
+                                "id" =>
+                                    isset($ids[$i]) && $ids[$i] !== ""
+                                        ? (int) $ids[$i]
+                                        : null,
+                                "nombre" => $nombre,
+                                "orden" => isset($ordenes[$i])
+                                    ? (int) $ordenes[$i]
+                                    : $i + 1,
                             ];
                         }
 
@@ -164,42 +171,63 @@ final readonly class ConfiguracionSindicatoController
                     }
 
                     // Procesar integrantes del comité si vienen en el POST (estructura: comite[id][], comite[puesto_id][], comite[nombre][], comite[periodo_inicio][], comite[periodo_fin][], comite[biografia][])
-                    $rawComite = $postData['comite'] ?? null;
+                    $rawComite = $postData["comite"] ?? null;
                     if (is_array($rawComite)) {
                         $integrantes = [];
 
-                        $ids = $rawComite['id'] ?? [];
-                        $puestos = $rawComite['puesto_id'] ?? [];
-                        $nombres = $rawComite['nombre'] ?? [];
-                        $periodosInicio = $rawComite['periodo_inicio'] ?? [];
-                        $periodosFin = $rawComite['periodo_fin'] ?? [];
-                        $biografias = $rawComite['biografia'] ?? [];
+                        $ids = $rawComite["id"] ?? [];
+                        $puestos = $rawComite["puesto_id"] ?? [];
+                        $nombres = $rawComite["nombre"] ?? [];
+                        $periodosInicio = $rawComite["periodo_inicio"] ?? [];
+                        $periodosFin = $rawComite["periodo_fin"] ?? [];
+                        $biografias = $rawComite["biografia"] ?? [];
 
                         $count = max(count($nombres), count($puestos));
                         for ($i = 0; $i < $count; $i++) {
-                            $nombre = trim((string) ($nombres[$i] ?? ''));
-                            $puestoId = isset($puestos[$i]) ? (int) $puestos[$i] : 0;
+                            $nombre = trim((string) ($nombres[$i] ?? ""));
+                            $puestoId = isset($puestos[$i])
+                                ? (int) $puestos[$i]
+                                : 0;
 
                             // Si no hay nombre ni puesto, ignorar la entrada
-                            if ($nombre === '' && $puestoId <= 0) {
+                            if ($nombre === "" && $puestoId <= 0) {
                                 continue;
                             }
 
                             $integrantes[] = [
-                                'id' => isset($ids[$i]) && $ids[$i] !== '' ? (int) $ids[$i] : null,
-                                'puestoId' => $puestoId,
-                                'nombre' => $nombre,
-                                'periodoInicio' => isset($periodosInicio[$i]) && $periodosInicio[$i] !== '' ? $periodosInicio[$i] : null,
-                                'periodoFin' => isset($periodosFin[$i]) && $periodosFin[$i] !== '' ? $periodosFin[$i] : null,
-                                'biografia' => isset($biografias[$i]) ? trim((string) $biografias[$i]) : null,
+                                "id" =>
+                                    isset($ids[$i]) && $ids[$i] !== ""
+                                        ? (int) $ids[$i]
+                                        : null,
+                                "puestoId" => $puestoId,
+                                "nombre" => $nombre,
+                                "periodoInicio" =>
+                                    isset($periodosInicio[$i]) &&
+                                    $periodosInicio[$i] !== ""
+                                        ? $periodosInicio[$i]
+                                        : null,
+                                "periodoFin" =>
+                                    isset($periodosFin[$i]) &&
+                                    $periodosFin[$i] !== ""
+                                        ? $periodosFin[$i]
+                                        : null,
+                                "biografia" => isset($biografias[$i])
+                                    ? trim((string) $biografias[$i])
+                                    : null,
                             ];
                         }
 
                         if (!empty($integrantes)) {
-                            $this->repository->syncIntegrantesComite($sindicatoId, $integrantes);
+                            $this->repository->syncIntegrantesComite(
+                                $sindicatoId,
+                                $integrantes,
+                            );
                         } else {
                             // si el formulario envía lista vacía explícita, desactivamos todos
-                            $this->repository->syncIntegrantesComite($sindicatoId, []);
+                            $this->repository->syncIntegrantesComite(
+                                $sindicatoId,
+                                [],
+                            );
                         }
                     }
 
@@ -227,7 +255,9 @@ final readonly class ConfiguracionSindicatoController
         $metas = array_map(fn($v) => $v->valor, $valores);
 
         // Obtener integrantes del comité y puestos para la sección administrativa
-        $comite = $this->repository->obtenerIntegrantesComiteActivos($sindicatoId) ?? [];
+        $comite =
+            $this->repository->obtenerIntegrantesComiteActivos($sindicatoId) ??
+            [];
         $puestosComite = $this->repository->obtenerPuestos($sindicatoId) ?? [];
 
         $context = $this->viewContextProvider->get();

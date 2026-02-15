@@ -147,9 +147,12 @@
                 <div class="input-group mb-2">
                     <input type="text" name="metas[]" class="form-control" value="{$m}">
                     <div class="btn-group ms-2" role="group" aria-label="Acciones">
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
-                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-meta" title="Eliminar"><i class="bi bi-trash"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-up" title="Subir"><i
+                                class="bi bi-chevron-up"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-down" title="Bajar"><i
+                                class="bi bi-chevron-down"></i></button>
+                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-meta" title="Eliminar"><i
+                                class="bi bi-trash"></i></button>
                     </div>
                 </div>
                 {/foreach}
@@ -158,16 +161,20 @@
                 <div class="input-group mb-2">
                     <input type="text" name="metas[]" class="form-control" value="">
                     <div class="btn-group ms-2" role="group" aria-label="Acciones">
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
-                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-meta" title="Eliminar"><i class="bi bi-trash"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-up" title="Subir"><i
+                                class="bi bi-chevron-up"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-down" title="Bajar"><i
+                                class="bi bi-chevron-down"></i></button>
+                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-meta" title="Eliminar"><i
+                                class="bi bi-trash"></i></button>
                     </div>
                 </div>
                 {/if}
             </div>
             <div>
                 <button type="button" class="btn btn-sm btn-secondary" id="add-meta">Agregar meta</button>
-                <div class="form-text">Agrega metas institucionales que se mostrarán en la sección "Acerca". Usa las flechas para reordenar.</div>
+                <div class="form-text">Agrega metas institucionales que se mostrarán en la sección "Acerca". Usa las
+                    flechas para reordenar.</div>
             </div>
         </div>
     </div>
@@ -181,7 +188,8 @@
             <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
                 <div>No hay puestos definidos para este sindicato.</div>
                 <div>
-                    <button type="submit" name="import_default_puestos" value="1" class="btn btn-sm btn-outline-primary">Cargar puestos por defecto</button>
+                    <button type="submit" name="import_default_puestos" value="1"
+                        class="btn btn-sm btn-outline-primary">Cargar puestos por defecto</button>
                 </div>
             </div>
             {/if}
@@ -193,17 +201,22 @@
                     <div class="row g-2 align-items-center">
                         <div class="col-md-6">
                             <label class="form-label mb-1">Nombre del puesto</label>
-                            <input type="text" name="puestos[nombre][]" class="form-control form-control-sm" value="{$puesto['nombre']}">
+                            <input type="text" name="puestos[nombre][]" class="form-control form-control-sm"
+                                value="{$puesto['nombre']}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label mb-1">Orden</label>
-                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm" value="{$puesto['orden']}" min="1">
+                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm"
+                                value="{$puesto['orden']}" min="1">
                         </div>
                         <div class="col-md-4 text-end">
                             <label class="form-label mb-1 d-block">&nbsp;</label>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto" title="Eliminar"><i class="bi bi-trash"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up"
+                                title="Subir"><i class="bi bi-chevron-up"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down"
+                                title="Bajar"><i class="bi bi-chevron-down"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto"
+                                title="Eliminar"><i class="bi bi-trash"></i></button>
                         </div>
                     </div>
                 </div>
@@ -219,13 +232,17 @@
                         </div>
                         <div class="col-md-2">
                             <label class="form-label mb-1">Orden</label>
-                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm" value="1" min="1">
+                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm" value="1"
+                                min="1">
                         </div>
                         <div class="col-md-4 text-end">
                             <label class="form-label mb-1 d-block">&nbsp;</label>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto" title="Eliminar"><i class="bi bi-trash"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up"
+                                title="Subir"><i class="bi bi-chevron-up"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down"
+                                title="Bajar"><i class="bi bi-chevron-down"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto"
+                                title="Eliminar"><i class="bi bi-trash"></i></button>
                         </div>
                     </div>
                 </div>
@@ -233,7 +250,8 @@
             </div>
             <div class="mt-2">
                 <button type="button" class="btn btn-sm btn-secondary" id="add-puesto">Agregar puesto</button>
-                <div class="form-text">Agrega, edita o elimina puestos del comité. Los integrantes asignados a un puesto eliminado quedarán sin puesto.</div>
+                <div class="form-text">Agrega, edita o elimina puestos del comité. Los integrantes asignados a un puesto
+                    eliminado quedarán sin puesto.</div>
             </div>
 
             <template id="puesto-template">
@@ -246,13 +264,17 @@
                         </div>
                         <div class="col-md-2">
                             <label class="form-label mb-1">Orden</label>
-                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm" value="1" min="1">
+                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm" value="1"
+                                min="1">
                         </div>
                         <div class="col-md-4 text-end">
                             <label class="form-label mb-1 d-block">&nbsp;</label>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto" title="Eliminar"><i class="bi bi-trash"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up"
+                                title="Subir"><i class="bi bi-chevron-up"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down"
+                                title="Bajar"><i class="bi bi-chevron-down"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto"
+                                title="Eliminar"><i class="bi bi-trash"></i></button>
                         </div>
                     </div>
                 </div>
@@ -275,28 +297,34 @@
                             <select name="comite[puesto_id][]" class="form-select">
                                 <option value="">-- Seleccionar --</option>
                                 {foreach $puestosComite ?? [] as $p}
-                                <option value="{$p['id']}" {if $miembro['puestoId'] === $p['id']}selected{/if}>{$p['nombre']}</option>
+                                <option value="{$p['id']}" {if $miembro['puestoId']===$p['id']}selected{/if}>
+                                    {$p['nombre']}</option>
                                 {/foreach}
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Nombre</label>
-                            <input type="text" name="comite[nombre][]" class="form-control" value="{$miembro['nombre']}">
+                            <input type="text" name="comite[nombre][]" class="form-control"
+                                value="{$miembro['nombre']}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">Inicio</label>
-                            <input type="date" name="comite[periodo_inicio][]" class="form-control" value="{if $miembro['periodoInicio']}$miembro['periodoInicio']->format('Y-m-d'){else}{/if}">
+                            <input type="date" name="comite[periodo_inicio][]" class="form-control"
+                                value="{if $miembro['periodoInicio']}$miembro['periodoInicio']->format('Y-m-d'){else}{/if}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">Fin</label>
-                            <input type="date" name="comite[periodo_fin][]" class="form-control" value="{if $miembro['periodoFin']}$miembro['periodoFin']->format('Y-m-d'){else}{/if}">
+                            <input type="date" name="comite[periodo_fin][]" class="form-control"
+                                value="{if $miembro['periodoFin']}$miembro['periodoFin']->format('Y-m-d'){else}{/if}">
                         </div>
                         <div class="col-12 mt-2">
                             <label class="form-label">Biografía (opcional)</label>
-                            <textarea name="comite[biografia][]" class="form-control" rows="2">{$miembro['biografia']}</textarea>
+                            <textarea name="comite[biografia][]" class="form-control"
+                                rows="2">{$miembro['biografia']}</textarea>
                         </div>
                         <div class="col-12 text-end mt-2">
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-comite">Eliminar</button>
+                            <button type="button"
+                                class="btn btn-outline-danger btn-sm btn-remove-comite">Eliminar</button>
                         </div>
                     </div>
                 </div>
@@ -332,7 +360,8 @@
                             <textarea name="comite[biografia][]" class="form-control" rows="2"></textarea>
                         </div>
                         <div class="col-12 text-end mt-2">
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-comite">Eliminar</button>
+                            <button type="button"
+                                class="btn btn-outline-danger btn-sm btn-remove-comite">Eliminar</button>
                         </div>
                     </div>
                 </div>
@@ -340,7 +369,8 @@
             </div>
             <div>
                 <button type="button" class="btn btn-sm btn-secondary" id="add-comite">Agregar integrante</button>
-                <div class="form-text">Agrega, edita o elimina integrantes del comité. Eliminar un integrante lo desactivará al guardar.</div>
+                <div class="form-text">Agrega, edita o elimina integrantes del comité. Eliminar un integrante lo
+                    desactivará al guardar.</div>
             </div>
 
             <template id="miembro-template">
@@ -373,7 +403,8 @@
                             <textarea name="comite[biografia][]" class="form-control" rows="2"></textarea>
                         </div>
                         <div class="col-12 text-end mt-2">
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-comite">Eliminar</button>
+                            <button type="button"
+                                class="btn btn-outline-danger btn-sm btn-remove-comite">Eliminar</button>
                         </div>
                     </div>
                 </div>
@@ -390,7 +421,7 @@
 </form>
 
 <script>
-(function () {
+    (function () {
     const list = document.getElementById('metas-list');
     const addBtn = document.getElementById('add-meta');
 

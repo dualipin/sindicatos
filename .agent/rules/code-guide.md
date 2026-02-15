@@ -15,3 +15,7 @@ trigger: always_on
 ## Relativo a la arquitectura
 
 usa una solucion profesional respetando una arquitectura que separe las capas claramente.
+
+## Relativo a la ejecucion
+
+El proyecto se esta ejecutando con pondman, tomalo en cuenta y consulta `compose.yaml`

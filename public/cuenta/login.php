@@ -2,15 +2,11 @@
 
 declare(strict_types=1);
 
-
 use App\Bootstrap;
 use App\Http\Controller\Auth\LoginController;
 use App\Infrastructure\Session\SessionManager;
-use App\Infrastructure\Templating\RendererInterface;
-use App\Shared\View\SindicatoViewContextProvider;
-use DI\Container;
 
-require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . "/../../bootstrap.php";
 
 $container = Bootstrap::buildContainer();
 
@@ -18,27 +14,16 @@ $container = Bootstrap::buildContainer();
 $session = $container->get(SessionManager::class);
 $session->start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+/** @var LoginController $controller */
+$controller = $container->get(LoginController::class);
 
-    /** @var LoginController $controller */
-    $controller = $container->get(LoginController::class);
+$redirectTo = $_GET["redirect_to"] ?? ($_POST["redirect"] ?? "/");
 
-    $controller->handle($email, $password);
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = $_POST["email"] ?? "";
+    $password = $_POST["password"] ?? "";
+    $controller->login($email, $password, $redirectTo);
+} else {
+    $error = $_GET["error"] ?? null;
+    $controller->showLoginForm($redirectTo, $error);
 }
-
-/** @var RendererInterface $renderer */
-$renderer = $container->get(RendererInterface::class);
-
-/** @var SindicatoViewContextProvider $sindicatoProvider */
-$sindicatoProvider = $container->get(SindicatoViewContextProvider::class);
-
-$data = [
-    'email' => '',
-    'error' => '',
-    'redirect' => '',
-    ...$sindicatoProvider->get()
-];
-
-$renderer->render(__DIR__ . '/login.latte', $data);

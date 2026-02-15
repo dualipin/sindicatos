@@ -8,8 +8,6 @@ use function DI\autowire;
 
 return function (ContainerBuilder $container) {
     $container->addDefinitions([
-        // \App\Domain\Sindicato\ConfiguracionSindicatoRepositoryInterface::class => autowire(
-        //     \App\Infrastructure\Repositories\Sindicato\ConfiguracionSindicatoRepository::class
-        // )
+        App\Module\Usuario\Repository\UsuarioRepository::class => DI\autowire(),
     ]);
 };

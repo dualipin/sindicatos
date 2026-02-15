@@ -12,7 +12,7 @@ final class UsuarioRepository
     ) {
     }
 
-    public function buscarPorEmail(): ?Usuario
+    public function buscarPorEmail(string $email): ?Usuario
     {
         $stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE correo = :email LIMIT 1");
         $stmt->bindParam(':email', $email);
@@ -24,10 +24,62 @@ final class UsuarioRepository
         }
 
         return new Usuario(
+            sindicatoId: (int)$row['sindicato_id'],
             correo: $row['correo'],
             passwordHash: $row['contra'],
+            nombre: $row['nombre'],
+            apellidos: $row['apellidos'],
             id: $row['usuario_id'],
-            activo: $row['activo']
+            activo: (bool)$row['activo']
         );
+    }
+
+    public function crear(Usuario $usuario): void
+    {
+        $sql = "INSERT INTO usuarios (
+            usuario_id, sindicato_id, correo, contra, nombre, apellidos, 
+            curp, rfc, nss, fecha_nacimiento, telefono, direccion, 
+            categoria, departamento, fecha_ingreso_laboral
+        ) VALUES (
+            :id, :sindicato_id, :correo, :contra, :nombre, :apellidos, 
+            :curp, :rfc, :nss, :fecha_nacimiento, :telefono, :direccion, 
+            :categoria, :departamento, :fecha_ingreso_laboral
+        )";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'id' => $usuario->id,
+            'sindicato_id' => $usuario->sindicatoId,
+            'correo' => $usuario->correo,
+            'contra' => $usuario->passwordHash,
+            'nombre' => $usuario->nombre,
+            'apellidos' => $usuario->apellidos,
+            'curp' => $usuario->curp,
+            'rfc' => $usuario->rfc,
+            'nss' => $usuario->nss,
+            'fecha_nacimiento' => $usuario->fechaNacimiento?->format('Y-m-d'),
+            'telefono' => $usuario->telefono,
+            'direccion' => $usuario->direccion,
+            'categoria' => $usuario->categoria,
+            'departamento' => $usuario->departamento,
+            'fecha_ingreso_laboral' => $usuario->fechaIngresoLaboral?->format('Y-m-d')
+        ]);
+    }
+
+    public function asignarRol(string $usuarioId, int $rolId): void
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (:usuario_id, :rol_id)");
+        $stmt->execute([
+            'usuario_id' => $usuarioId,
+            'rol_id' => $rolId
+        ]);
+    }
+
+    public function buscarRolIdPorNombre(string $nombre, int $sindicatoId): ?int
+    {
+        $stmt = $this->pdo->prepare("SELECT rol_id FROM cat_roles WHERE nombre = :nombre AND sindicato_id = :sindicato_id LIMIT 1");
+        $stmt->execute(['nombre' => $nombre, 'sindicato_id' => $sindicatoId]);
+        $val = $stmt->fetchColumn();
+        return $val ? (int)$val : null;
     }
 }

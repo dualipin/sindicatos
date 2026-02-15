@@ -166,44 +166,6 @@ html body li {
     font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
 }
 
-/* -------------------------------------------------------------------------
-   Small layout fixes: committee cards on /acerca (mobile)
-   - Necesitamos object-fit para recortar imágenes (Bootstrap no provee utilidad).
-   - Ajustes de padding y min-height para evitar quiebres/overflow en móvil.
-   ------------------------------------------------------------------------- */
-
-.object-fit-cover {
-    /* Utility: asegurar que la imagen llene su caja sin deformar */
-    object-fit: cover !important;
-}
-
-.about__v4 .img-wrap .row .col .d-flex {
-    min-height: 64px; /* compactar altura de las tarjetas del comité */
-    padding: 0.5rem !important;
-    background: transparent !important; /* apariencia más limpia */
-    box-shadow: none !important;
-    border: 1px solid rgba(0,0,0,0.04);
-}
-
-.about__v4 .img-wrap img.rounded-circle {
-    width: 48px;
-    height: 48px;
-    object-fit: cover; /* fallback si .object-fit-cover no aplica */
-}
-
-.avatar-placeholder { width: 48px; height: 48px; }
-.avatar-placeholder i { line-height: 1; }
-
-@media (max-width: 575.98px) {
-    .about__v4 .img-wrap .row .col {
-        padding-left: 0.25rem;
-        padding-right: 0.25rem;
-    }
-
-    .about__v4 .img-wrap .d-flex {
-        padding: 0.5rem;
-    }
-}
 
 
 /* ============================================================================

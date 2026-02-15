@@ -166,6 +166,39 @@ html body li {
     font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
 }
 
+/* -------------------------------------------------------------------------
+   Small layout fixes: committee cards on /acerca (mobile)
+   - Necesitamos object-fit para recortar imágenes (Bootstrap no provee utilidad).
+   - Ajustes de padding y min-height para evitar quiebres/overflow en móvil.
+   ------------------------------------------------------------------------- */
+
+.object-fit-cover {
+    /* Utility: asegurar que la imagen llene su caja sin deformar */
+    object-fit: cover !important;
+}
+
+.about__v4 .img-wrap .row .col .d-flex {
+    min-height: 84px; /* uniformiza la altura de las tarjetas del comité */
+}
+
+.about__v4 .img-wrap img.rounded-circle {
+    width: 72px;
+    height: 72px;
+    object-fit: cover; /* fallback si .object-fit-cover no aplica */
+}
+
+@media (max-width: 575.98px) {
+    .about__v4 .img-wrap .row .col {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .about__v4 .img-wrap .d-flex {
+        padding: 0.65rem;
+    }
+}
+
+
 /* ============================================================================
    FIN DEL OVERRIDE
    ============================================================================ */

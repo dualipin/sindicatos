@@ -42,24 +42,25 @@
       <div class="col-md-6">
         <div class="img-wrap position-relative">
           {if !empty($contextoAcerca->comite)}
-          <div class="row row-cols-1 row-cols-sm-2 g-3 mb-3" data-aos="fade-up" data-aos-delay="0">
+          <div class="row row-cols-1 row-cols-md-2 g-4 mb-4" data-aos="fade-up" data-aos-delay="0">
             {foreach $contextoAcerca->comite as $miembro}
             <div class="col">
-              <div class="d-flex align-items-start gap-3 p-3 bg-white rounded-3 shadow-sm">
-                <div class="flex-shrink-0">
-                  {if $miembro['foto']}
-                    <img src="{resolveUploadUrl($miembro['foto'])}" alt="{$miembro['nombre']}" class="rounded-circle object-fit-cover" width="48" height="48">
-                  {else}
-                    <div class="avatar-placeholder rounded-circle d-inline-flex align-items-center justify-content-center bg-light text-secondary" style="width:48px;height:48px;">
-                      <i class="bi bi-person-fill fs-4"></i>
-                    </div>
-                  {/if}
-                </div>
-                <div class="flex-grow-1 w-100">
-                  <div class="fw-semibold text-break">{$miembro['nombre']}
+              <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body d-flex gap-3 align-items-start p-3">
+                  <div class="flex-shrink-0">
+                    {if $miembro['foto']}
+                      <img src="{resolveUploadUrl($miembro['foto'])}" alt="{$miembro['nombre']}" class="rounded-circle object-fit-cover" width="48" height="48">
+                    {else}
+                      <div class="avatar-placeholder rounded-circle d-inline-flex align-items-center justify-content-center bg-light text-secondary">
+                        <i class="bi bi-person-fill fs-4"></i>
+                      </div>
+                    {/if}
+                  </div>
+                  <div class="flex-grow-1 w-100">
+                    <div class="fw-semibold text-break">{$miembro['nombre']}</div>
                     <div class="small text-muted text-break">{$miembro['puesto'] ?? 'Miembro'}</div>
                     {if $miembro['biografia']}
-                    <div class="mt-2 small text-muted">{$miembro['biografia']}</div>
+                      <div class="mt-2 small text-muted">{$miembro['biografia']}</div>
                     {/if}
                   </div>
                 </div>

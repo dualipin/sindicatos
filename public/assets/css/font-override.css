@@ -191,6 +191,7 @@ html body li {
     object-fit: cover; /* fallback si .object-fit-cover no aplica */
 }
 
+.avatar-placeholder { width: 48px; height: 48px; }
 .avatar-placeholder i { line-height: 1; }
 
 @media (max-width: 575.98px) {

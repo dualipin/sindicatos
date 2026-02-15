@@ -36,7 +36,7 @@
 
         <!-- Avisos -->
         <li class="nav-item" data-aos="fade-right" data-aos-delay="200">
-          <a href="/aplicacion/avisos/index.php" class="nav-link text-white-50 rounded mx-2 mb-1">
+          <a href="/portal/publicaciones/avisos.php" class="nav-link {ifset $linkActivo}{if $linkActivo === 'avisos'}text-white bg-white bg-opacity-10{else}text-white-50{/if}{else}text-white-50{/ifset} rounded mx-2 mb-1">
             <i class="bi bi-bell me-2"></i>
             <span>Avisos</span>
           </a>
@@ -44,7 +44,7 @@
 
         <!-- Noticias -->
         <li class="nav-item" data-aos="fade-right" data-aos-delay="300">
-          <a href="/aplicacion/noticias/index.php" class="nav-link text-white-50 rounded mx-2 mb-1">
+          <a href="/portal/publicaciones/noticias.php" class="nav-link {ifset $linkActivo}{if $linkActivo === 'noticias'}text-white bg-white bg-opacity-10{else}text-white-50{/if}{else}text-white-50{/ifset} rounded mx-2 mb-1">
             <i class="bi bi-newspaper me-2"></i>
             <span>Noticias</span>
           </a>
@@ -52,7 +52,7 @@
 
         <!-- Gestiones -->
         <li class="nav-item" data-aos="fade-right" data-aos-delay="400">
-          <a href="/aplicacion/gestiones/index.php" class="nav-link text-white-50 rounded mx-2 mb-1">
+          <a href="/portal/publicaciones/gestiones.php" class="nav-link {ifset $linkActivo}{if $linkActivo === 'gestiones'}text-white bg-white bg-opacity-10{else}text-white-50{/if}{else}text-white-50{/ifset} rounded mx-2 mb-1">
             <i class="bi bi-file-earmark-bar-graph-fill me-2"></i>
             <span>Gestiones</span>
           </a>

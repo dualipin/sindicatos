@@ -194,8 +194,6 @@ final readonly class ConfiguracionSindicatoController
         $context["usuario"] = $usuario;
         $context["sindicato"] = $sindicato;
         $context["metas"] = $metas;
-        $context["comite"] = $comite;
-        $context["puestosComite"] = $puestosComite;
         $context["success"] = $query["success"] ?? null;
         $context["error"] = $error;
 

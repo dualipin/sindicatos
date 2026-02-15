@@ -150,18 +150,27 @@ final readonly class SindicatoRepository
             return null;
         }
 
-        return array_map(fn($r) => [
-            'id' => (int)$r['integrante_id'],
-            'sindicatoId' => (int)$r['sindicato_id'],
-            'puestoId' => isset($r['puesto_id']) ? (int)$r['puesto_id'] : null,
-            'puesto' => $r['puesto_nombre'] ?? null,
-            'nombre' => $r['nombre'],
-            'periodoInicio' => $r['periodo_inicio'] ? new \DateTimeImmutable($r['periodo_inicio']) : null,
-            'periodoFin' => $r['periodo_fin'] ? new \DateTimeImmutable($r['periodo_fin']) : null,
-            'foto' => $r['foto'] ?? null,
-            'biografia' => $r['biografia'] ?? null,
-            'activo' => (bool)$r['activo'],
-        ], $rows);
+        return array_map(
+            fn($r) => [
+                "id" => (int) $r["integrante_id"],
+                "sindicatoId" => (int) $r["sindicato_id"],
+                "puestoId" => isset($r["puesto_id"])
+                    ? (int) $r["puesto_id"]
+                    : null,
+                "puesto" => $r["puesto_nombre"] ?? null,
+                "nombre" => $r["nombre"],
+                "periodoInicio" => $r["periodo_inicio"]
+                    ? new \DateTimeImmutable($r["periodo_inicio"])
+                    : null,
+                "periodoFin" => $r["periodo_fin"]
+                    ? new \DateTimeImmutable($r["periodo_fin"])
+                    : null,
+                "foto" => $r["foto"] ?? null,
+                "biografia" => $r["biografia"] ?? null,
+                "activo" => (bool) $r["activo"],
+            ],
+            $rows,
+        );
     }
 
     /**
@@ -184,12 +193,15 @@ final readonly class SindicatoRepository
             return null;
         }
 
-        return array_map(fn($r) => new \App\Module\Sindicato\Entity\Valor(
-            sindicatoId: (int)$r['sindicato_id'],
-            valor: $r['valor'],
-            orden: (int)$r['orden'],
-            id: (int)$r['valor_id']
-        ), $rows);
+        return array_map(
+            fn($r) => new \App\Module\Sindicato\Entity\Valor(
+                sindicatoId: (int) $r["sindicato_id"],
+                valor: $r["valor"],
+                orden: (int) $r["orden"],
+                id: (int) $r["valor_id"],
+            ),
+            $rows,
+        );
     }
 
     /**
@@ -326,7 +338,13 @@ final readonly class SindicatoRepository
             return null;
         }
 
-        return array_map(fn($r) => ['id' => (int)$r['puesto_id'], 'nombre' => $r['nombre_puesto']], $rows);
+        return array_map(
+            fn($r) => [
+                "id" => (int) $r["puesto_id"],
+                "nombre" => $r["nombre_puesto"],
+            ],
+            $rows,
+        );
     }
 
     /**
@@ -340,17 +358,22 @@ final readonly class SindicatoRepository
      *   'periodoInicio' => ?string (YYYY-MM-DD), 'periodoFin' => ?string, 'biografia' => ?string
      * ]
      */
-    public function syncIntegrantesComite(int $sindicatoId, array $integrantes): void
-    {
+    public function syncIntegrantesComite(
+        int $sindicatoId,
+        array $integrantes,
+    ): void {
         $this->pdo->beginTransaction();
         try {
             // obtener integrantes actuales
             $stmt = $this->pdo->prepare(
                 "SELECT integrante_id FROM sindicato_integrante_comite WHERE sindicato_id = :sindicato_id",
             );
-            $stmt->execute(['sindicato_id' => $sindicatoId]);
+            $stmt->execute(["sindicato_id" => $sindicatoId]);
             $rows = $stmt->fetchAll();
-            $existingIds = array_map(fn($r) => (int)$r['integrante_id'], $rows);
+            $existingIds = array_map(
+                fn($r) => (int) $r["integrante_id"],
+                $rows,
+            );
 
             $seen = [];
 
@@ -363,43 +386,52 @@ final readonly class SindicatoRepository
             );
 
             foreach ($integrantes as $it) {
-                $id = isset($it['id']) && $it['id'] ? (int)$it['id'] : null;
-                $puestoId = (int) ($it['puestoId'] ?? 0);
-                $nombre = trim((string) ($it['nombre'] ?? ''));
-                $periodoInicio = $it['periodoInicio'] !== '' && $it['periodoInicio'] !== null ? $it['periodoInicio'] : null;
-                $periodoFin = $it['periodoFin'] !== '' && $it['periodoFin'] !== null ? $it['periodoFin'] : null;
-                $biografia = isset($it['biografia']) ? $it['biografia'] : null;
+                $id = isset($it["id"]) && $it["id"] ? (int) $it["id"] : null;
+                $puestoId = (int) ($it["puestoId"] ?? 0);
+                $nombre = trim((string) ($it["nombre"] ?? ""));
+                $periodoInicio =
+                    $it["periodoInicio"] !== "" && $it["periodoInicio"] !== null
+                        ? $it["periodoInicio"]
+                        : null;
+                $periodoFin =
+                    $it["periodoFin"] !== "" && $it["periodoFin"] !== null
+                        ? $it["periodoFin"]
+                        : null;
+                $biografia = isset($it["biografia"]) ? $it["biografia"] : null;
 
                 if ($id !== null && in_array($id, $existingIds, true)) {
                     $upd->execute([
-                        'id' => $id,
-                        'puesto_id' => $puestoId,
-                        'nombre' => $nombre,
-                        'periodo_inicio' => $periodoInicio,
-                        'periodo_fin' => $periodoFin,
-                        'biografia' => $biografia,
-                        'activo' => 1,
+                        "id" => $id,
+                        "puesto_id" => $puestoId,
+                        "nombre" => $nombre,
+                        "periodo_inicio" => $periodoInicio,
+                        "periodo_fin" => $periodoFin,
+                        "biografia" => $biografia,
+                        "activo" => 1,
                     ]);
                     $seen[] = $id;
                 } else {
                     $ins->execute([
-                        'sindicato_id' => $sindicatoId,
-                        'puesto_id' => $puestoId,
-                        'nombre' => $nombre,
-                        'periodo_inicio' => $periodoInicio,
-                        'periodo_fin' => $periodoFin,
-                        'foto' => null,
-                        'biografia' => $biografia,
-                        'activo' => 1,
+                        "sindicato_id" => $sindicatoId,
+                        "puesto_id" => $puestoId,
+                        "nombre" => $nombre,
+                        "periodo_inicio" => $periodoInicio,
+                        "periodo_fin" => $periodoFin,
+                        "foto" => null,
+                        "biografia" => $biografia,
+                        "activo" => 1,
                     ]);
-                    $seen[] = (int)$this->pdo->lastInsertId();
+                    $seen[] = (int) $this->pdo->lastInsertId();
                 }
             }
 
             // marcar como inactivos los que no fueron enviados
             $toDisable = array_diff($existingIds, $seen);
             if (!empty($toDisable)) {
-                $placeholders = implode(',', array_fill(0, count($toDisable), '?'));
+                $placeholders = implode(
+                    ",",
+                    array_fill(0, count($toDisable), "?"),
+                );
                 $sql = "UPDATE sindicato_integrante_comite SET activo = 0 WHERE integrante_id IN ($placeholders)";
                 $stmt2 = $this->pdo->prepare($sql);
                 $stmt2->execute(array_values($toDisable));

@@ -35,3 +35,5 @@ Si tienes duda sobre de que es la aplicacion consulta `context.md`
 ### Ejecución
 
 El proyecto corre con **Podman**. Antes de asumir configuración de servicios, puertos o variables de entorno, consulta `compose.yaml`.
+
+- Si deseas ejecutar código directamente en el contenedor, usa `podman` para acceder a una terminal interactiva.

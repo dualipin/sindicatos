@@ -325,12 +325,12 @@ final readonly class SindicatoRepository
 
     /**
      * Devuelve los puestos definidos para un sindicato (ordenados por jerarquía).
-     * @return array<int,array{id:int,nombre:string}>|null
+     * @return array<int,array{id:int,nombre:string,orden:int}>|null
      */
     public function obtenerPuestos(int $sindicatoId): ?array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT puesto_id, nombre_puesto FROM sindicato_puestos WHERE sindicato_id = :sindicato_id ORDER BY orden_jerarquico ASC",
+            "SELECT puesto_id, nombre_puesto, orden_jerarquico FROM sindicato_puestos WHERE sindicato_id = :sindicato_id ORDER BY orden_jerarquico ASC",
         );
         $stmt->execute(["sindicato_id" => $sindicatoId]);
         $rows = $stmt->fetchAll();
@@ -342,9 +342,84 @@ final readonly class SindicatoRepository
             fn($r) => [
                 "id" => (int) $r["puesto_id"],
                 "nombre" => $r["nombre_puesto"],
+                "orden" => (int) $r["orden_jerarquico"],
             ],
             $rows,
         );
+    }
+
+    /**
+     * Sincroniza la lista de puestos del comité para un sindicato.
+     * - Inserta nuevos puestos
+     * - Actualiza los existentes (por puesto_id)
+     * - Elimina los que ya no aparecen en la lista enviada
+     *
+     * Formato esperado de $puestos: array of [
+     *   'id' => ?int, 'nombre' => string, 'orden' => int
+     * ]
+     */
+    public function syncPuestos(int $sindicatoId, array $puestos): void
+    {
+        $this->pdo->beginTransaction();
+        try {
+            // obtener puestos actuales
+            $stmt = $this->pdo->prepare(
+                "SELECT puesto_id FROM sindicato_puestos WHERE sindicato_id = :sindicato_id",
+            );
+            $stmt->execute(['sindicato_id' => $sindicatoId]);
+            $rows = $stmt->fetchAll();
+            $existingIds = array_map(fn($r) => (int)$r['puesto_id'], $rows);
+
+            $seen = [];
+
+            $ins = $this->pdo->prepare(
+                "INSERT INTO sindicato_puestos (sindicato_id, nombre_puesto, orden_jerarquico) VALUES (:sindicato_id, :nombre_puesto, :orden_jerarquico)",
+            );
+
+            $upd = $this->pdo->prepare(
+                "UPDATE sindicato_puestos SET nombre_puesto = :nombre_puesto, orden_jerarquico = :orden_jerarquico WHERE puesto_id = :id",
+            );
+
+            foreach ($puestos as $p) {
+                $id = isset($p['id']) && $p['id'] ? (int)$p['id'] : null;
+                $nombre = trim((string) ($p['nombre'] ?? ''));
+                $orden = (int) ($p['orden'] ?? 0);
+
+                if ($nombre === '') {
+                    continue; // ignorar entradas vacías
+                }
+
+                if ($id !== null && in_array($id, $existingIds, true)) {
+                    $upd->execute([
+                        'id' => $id,
+                        'nombre_puesto' => $nombre,
+                        'orden_jerarquico' => $orden,
+                    ]);
+                    $seen[] = $id;
+                } else {
+                    $ins->execute([
+                        'sindicato_id' => $sindicatoId,
+                        'nombre_puesto' => $nombre,
+                        'orden_jerarquico' => $orden,
+                    ]);
+                    $seen[] = (int)$this->pdo->lastInsertId();
+                }
+            }
+
+            // eliminar los que no fueron enviados
+            $toDelete = array_diff($existingIds, $seen);
+            if (!empty($toDelete)) {
+                $placeholders = implode(',', array_fill(0, count($toDelete), '?'));
+                $sql = "DELETE FROM sindicato_puestos WHERE puesto_id IN ($placeholders)";
+                $stmt2 = $this->pdo->prepare($sql);
+                $stmt2->execute(array_values($toDelete));
+            }
+
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
     }
 
     /**

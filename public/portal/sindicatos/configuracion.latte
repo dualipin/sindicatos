@@ -174,7 +174,7 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white">
-            <h5 class="mb-0">Miembros del comité</h5>
+            <h5 class="mb-0">Puestos del comité</h5>
         </div>
         <div class="card-body">
             {if empty($puestosComite)}
@@ -186,6 +186,85 @@
             </div>
             {/if}
 
+            <div id="puestos-list">
+                {foreach $puestosComite ?? [] as $puesto}
+                <div class="card p-2 mb-2 puesto-item">
+                    <input type="hidden" name="puestos[id][]" value="{$puesto['id']}">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <label class="form-label mb-1">Nombre del puesto</label>
+                            <input type="text" name="puestos[nombre][]" class="form-control form-control-sm" value="{$puesto['nombre']}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label mb-1">Orden</label>
+                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm" value="{$puesto['orden']}" min="1">
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <label class="form-label mb-1 d-block">&nbsp;</label>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto" title="Eliminar"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+
+                {if empty($puestosComite)}
+                <div class="card p-2 mb-2 puesto-item">
+                    <input type="hidden" name="puestos[id][]" value="">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <label class="form-label mb-1">Nombre del puesto</label>
+                            <input type="text" name="puestos[nombre][]" class="form-control form-control-sm" value="">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label mb-1">Orden</label>
+                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm" value="1" min="1">
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <label class="form-label mb-1 d-block">&nbsp;</label>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto" title="Eliminar"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+            </div>
+            <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-secondary" id="add-puesto">Agregar puesto</button>
+                <div class="form-text">Agrega, edita o elimina puestos del comité. Los integrantes asignados a un puesto eliminado quedarán sin puesto.</div>
+            </div>
+
+            <template id="puesto-template">
+                <div class="card p-2 mb-2 puesto-item">
+                    <input type="hidden" name="puestos[id][]" value="">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <label class="form-label mb-1">Nombre del puesto</label>
+                            <input type="text" name="puestos[nombre][]" class="form-control form-control-sm" value="">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label mb-1">Orden</label>
+                            <input type="number" name="puestos[orden][]" class="form-control form-control-sm" value="1" min="1">
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <label class="form-label mb-1 d-block">&nbsp;</label>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-move-puesto-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
+                            <button type="button" class="btn btn-outline-danger btn-sm btn-remove-puesto" title="Eliminar"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Miembros del comité</h5>
+        </div>
+        <div class="card-body">
             <div id="comite-list">
                 {foreach $comite ?? [] as $miembro}
                 <div class="card p-3 mb-2 miembro-item">
@@ -382,6 +461,63 @@
 
     // inicializar estado de botones
     updateMoveButtons();
+
+    // PUESTOS: añadir / eliminar / reordenar
+    (function () {
+        const puestosList = document.getElementById('puestos-list');
+        const addPuestoBtn = document.getElementById('add-puesto');
+        const puestoTemplate = document.getElementById('puesto-template');
+
+        function updatePuestoOrden() {
+            const items = Array.from(puestosList.querySelectorAll('.puesto-item'));
+            items.forEach((item, idx) => {
+                const ordenInput = item.querySelector('input[name="puestos[orden][]"]');
+                if (ordenInput) ordenInput.value = idx + 1;
+
+                const btnUp = item.querySelector('.btn-move-puesto-up');
+                const btnDown = item.querySelector('.btn-move-puesto-down');
+                if (btnUp) btnUp.disabled = idx === 0;
+                if (btnDown) btnDown.disabled = idx === items.length - 1;
+            });
+        }
+
+        addPuestoBtn?.addEventListener('click', function () {
+            const node = puestoTemplate.content.firstElementChild.cloneNode(true);
+            puestosList.appendChild(node);
+            const nombreInput = node.querySelector('input[name="puestos[nombre][]"]');
+            if (nombreInput) nombreInput.focus();
+            updatePuestoOrden();
+        });
+
+        puestosList?.addEventListener('click', function (e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const item = btn.closest('.puesto-item');
+            if (!item) return;
+
+            if (btn.classList.contains('btn-remove-puesto')) {
+                item.remove();
+                updatePuestoOrden();
+                return;
+            }
+
+            if (btn.classList.contains('btn-move-puesto-up')) {
+                const prev = item.previousElementSibling;
+                if (prev) item.parentNode.insertBefore(item, prev);
+                updatePuestoOrden();
+                return;
+            }
+
+            if (btn.classList.contains('btn-move-puesto-down')) {
+                const next = item.nextElementSibling;
+                if (next) item.parentNode.insertBefore(next, item);
+                updatePuestoOrden();
+                return;
+            }
+        });
+
+        updatePuestoOrden();
+    })();
 
     // COMITÉ: añadir / eliminar integrantes
     (function () {

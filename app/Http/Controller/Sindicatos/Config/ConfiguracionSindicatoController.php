@@ -136,6 +136,33 @@ final readonly class ConfiguracionSindicatoController
                         $this->repository->guardarValores($sindicatoId, $metas);
                     }
 
+                    // Procesar puestos del comité si vienen en el POST (estructura: puestos[id][], puestos[nombre][], puestos[orden][])
+                    $rawPuestos = $postData['puestos'] ?? null;
+                    if (is_array($rawPuestos)) {
+                        $puestos = [];
+
+                        $ids = $rawPuestos['id'] ?? [];
+                        $nombres = $rawPuestos['nombre'] ?? [];
+                        $ordenes = $rawPuestos['orden'] ?? [];
+
+                        $count = count($nombres);
+                        for ($i = 0; $i < $count; $i++) {
+                            $nombre = trim((string) ($nombres[$i] ?? ''));
+
+                            if ($nombre === '') {
+                                continue; // ignorar entradas vacías
+                            }
+
+                            $puestos[] = [
+                                'id' => isset($ids[$i]) && $ids[$i] !== '' ? (int) $ids[$i] : null,
+                                'nombre' => $nombre,
+                                'orden' => isset($ordenes[$i]) ? (int) $ordenes[$i] : ($i + 1),
+                            ];
+                        }
+
+                        $this->repository->syncPuestos($sindicatoId, $puestos);
+                    }
+
                     // Procesar integrantes del comité si vienen en el POST (estructura: comite[id][], comite[puesto_id][], comite[nombre][], comite[periodo_inicio][], comite[periodo_fin][], comite[biografia][])
                     $rawComite = $postData['comite'] ?? null;
                     if (is_array($rawComite)) {

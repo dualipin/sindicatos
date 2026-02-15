@@ -112,6 +112,109 @@
 <div
     class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center pt-3 pb-2 mb-3 border-top">
     <div>
+        <h2 class="h4 mb-1">Configuracion del Sindicato</h2>
+        <p class="text-muted mb-0">Ajusta identidad, contacto y visibilidad por sindicato.</p>
+    </div>
+    <div class="mt-2 mt-lg-0">
+        <span class="badge text-bg-secondary"><i class="bi bi-sliders me-1"></i>Administracion</span>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div
+        class="card-header bg-white d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center">
+        <div>
+            <h5 class="mb-1">Ajustes generales</h5>
+            <small class="text-muted">Selecciona un sindicato para editar su configuracion.</small>
+        </div>
+        <div class="mt-2 mt-lg-0">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-building"></i></span>
+                <select class="form-select" aria-label="Seleccionar sindicato">
+                    <option selected>Selecciona sindicato...</option>
+                    <option value="1">Sindicato 1</option>
+                    <option value="2">Sindicato 2</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Nombre del sindicato</label>
+                <input type="text" class="form-control" value="Sindicato Nacional de Ejemplo">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Abreviacion</label>
+                <input type="text" class="form-control" value="SNE">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">RFC</label>
+                <input type="text" class="form-control" value="SNE010101ABC">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Telefono</label>
+                <input type="text" class="form-control" value="(999) 123-4567">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Correo</label>
+                <input type="email" class="form-control" value="contacto@sindicato.mx">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Sitio web</label>
+                <input type="url" class="form-control" value="https://sindicato.mx">
+            </div>
+            <div class="col-12">
+                <label class="form-label">Direccion</label>
+                <textarea class="form-control" rows="2">Av. Principal 123, Col. Centro</textarea>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Facebook</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-facebook"></i></span>
+                    <input type="url" class="form-control" value="https://facebook.com/sindicato">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">WhatsApp</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-whatsapp"></i></span>
+                    <input type="text" class="form-control" value="9991234567">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Tema visual</label>
+                <select class="form-select">
+                    <option selected>Predeterminado</option>
+                    <option>Azul institucional</option>
+                    <option>Verde sindical</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Zona horaria</label>
+                <select class="form-select">
+                    <option selected>America/Mexico_City</option>
+                    <option>America/Cancun</option>
+                    <option>America/Monterrey</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" checked>
+                    <label class="form-check-label">Portal publico activo</label>
+                </div>
+            </div>
+            <div class="col-12 d-flex flex-column flex-md-row gap-2">
+                <button type="button" class="btn btn-primary"><i class="bi bi-save me-1"></i>Guardar cambios</button>
+                <button type="button" class="btn btn-outline-secondary">Restablecer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div
+    class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center pt-3 pb-2 mb-3 border-top">
+    <div>
         <h2 class="h4 mb-1">Seguridad y Acceso</h2>
         <p class="text-muted mb-0">Vista administrativa para multi-sindicato (Super Admin).</p>
     </div>

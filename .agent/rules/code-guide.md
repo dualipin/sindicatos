@@ -29,6 +29,8 @@ El proyecto sigue una arquitectura de capas con la siguiente estructura:
 
 Antes de implementar cualquier funcionalidad nueva, pregunta si no tienes claro en qué capa corresponde o si existe ya un servicio o repositorio que resuelva la necesidad.
 
+Si tienes duda sobre de que es la aplicacion consulta `context.md`
+
 ### Ejecución
 
 El proyecto corre con **Podman**. Antes de asumir configuración de servicios, puertos o variables de entorno, consulta `compose.yaml`.

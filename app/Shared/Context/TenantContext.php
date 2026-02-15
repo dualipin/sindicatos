@@ -2,29 +2,26 @@
 
 namespace App\Shared\Context;
 
+use App\Infrastructure\Session\SessionManager;
+
 final readonly class TenantContext
 {
-    private const string SindicateIdKey = 'syndicate_id';
-    private const string UserIdKey = 'user_id';
+    private const string KEY = "syndicate_id";
 
-    public function getSyndicateId(): int
+    public function __construct(private SessionManager $manager) {}
+
+    public function get(): ?int
     {
-        return $_SESSION[self::SindicateIdKey] ?? 1;
+        return $this->manager->get(self::KEY);
     }
 
-    public function setSyndicateId(int $syndicateId): void
+    public function set(int $syndicateId): void
     {
-        $_SESSION[self::SindicateIdKey] = $syndicateId;
+        $this->manager->set(self::KEY, $syndicateId);
     }
 
-    public function getUserId(): ?string
+    public function clear(): void
     {
-        return $_SESSION[self::UserIdKey] ?? null;
+        $this->manager->remove(self::KEY);
     }
-
-    public function setUserId(string $userId): void
-    {
-        $_SESSION[self::UserIdKey] = $userId;
-    }
-
 }

@@ -10,12 +10,11 @@ class ConfiguracionService
     public function __construct(
         private readonly ConfiguracionRepository $repository,
         private readonly TenantContext $context,
-    ) {
-    }
+    ) {}
 
     public function obtenerColoresSindicato()
     {
-        $id = $this->context->getSyndicateId();
+        $id = $this->context->get() ?? 1;
         return $this->repository->obtenerColores($id);
     }
 }

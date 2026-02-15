@@ -20,23 +20,34 @@ final class Bootstrap
 
     private static function build(): ContainerInterface
     {
-
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+        $dotenv = Dotenv::createImmutable(__DIR__ . "/..");
         $dotenv->safeLoad();
-        $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS', 'MAIL_HOST', 'MAIL_USER', 'MAIL_PASSWORD']);
+        $dotenv->required([
+            "DB_HOST",
+            "DB_NAME",
+            "DB_USER",
+            "DB_PASS",
+            "MAIL_HOST",
+            "MAIL_USER",
+            "MAIL_PASSWORD",
+        ]);
 
-        $isDev = ($_ENV['APP_ENV'] ?? 'prod') === 'dev';
+        $isDev = ($_ENV["APP_ENV"] ?? "prod") === "dev";
         $builder = new ContainerBuilder();
 
         if (!$isDev) {
-            $builder->enableCompilation(__DIR__ . '/../tmp/di_cache');
-            $builder->writeProxiesToFile(true, __DIR__ . '/../tmp/di_proxies');
+            $builder->enableCompilation(__DIR__ . "/../tmp/di_cache");
+            $builder->writeProxiesToFile(true, __DIR__ . "/../tmp/di_proxies");
         }
 
-        (require_once __DIR__ . '/../config/settings.php')($builder);
-        (require_once __DIR__ . '/../config/definitions.php')($builder);
-        (require_once __DIR__ . '/../config/services.php')($builder);
-        (require_once __DIR__ . '/../config/repositories.php')($builder);
+        $settings = require_once __DIR__ . "/../config/settings.php";
+        $settings($builder);
+        $definitions = require_once __DIR__ . "/../config/definitions.php";
+        $definitions($builder);
+        $services = require_once __DIR__ . "/../config/services.php";
+        $services($builder);
+        $repositories = require_once __DIR__ . "/../config/repositories.php";
+        $repositories($builder);
 
         return $builder->build();
     }

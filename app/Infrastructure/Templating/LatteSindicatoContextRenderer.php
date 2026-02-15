@@ -11,10 +11,7 @@ final readonly class LatteSindicatoContextRenderer implements RendererInterface
     public function __construct(
         private SindicatoViewContextProvider $provider,
         private RendererInterface $renderer,
-//        private LatteRenderer $latte,
-    )
-    {
-    }
+    ) {}
 
     public function render(string $template, array $params = []): void
     {
@@ -23,14 +20,14 @@ final readonly class LatteSindicatoContextRenderer implements RendererInterface
 
     public function renderToString(string $template, array $params = []): string
     {
-        return $this->renderer->renderToString($template, $this->mergeContext($params));
+        return $this->renderer->renderToString(
+            $template,
+            $this->mergeContext($params),
+        );
     }
 
     private function mergeContext(array $params): array
     {
-        return [
-            ...$params,
-            ...$this->provider->get(),
-        ];
+        return [...$params, ...$this->provider->get()];
     }
 }

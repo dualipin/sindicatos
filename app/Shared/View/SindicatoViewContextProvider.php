@@ -5,29 +5,21 @@ namespace App\Shared\View;
 use App\Module\Sindicato\Repository\SindicatoRepository;
 use App\Shared\Context\TenantContext;
 
-final class SindicatoViewContextProvider
+final class SindicatoViewContextProvider extends AbstractViewContextProvider
 {
     private ?array $cached = null;
 
     public function __construct(
         private readonly SindicatoRepository $sindicatoRepository,
         private readonly TenantContext $tenantContext,
-    ) {
-    }
+    ) {}
 
-    public function get(): array
+    protected function resolve(): array
     {
-        if ($this->cached !== null) {
-            return $this->cached;
-        }
-
-        $this->cached = [
-            'sindicatos' => $this->sindicatoRepository->listadoActivoSimple(),
-            'sindicatoActual' => $this->sindicatoRepository->buscarPorIdBasico(
-                $this->tenantContext->getSyndicateId()
-            )
+        return [
+            "sindicatoActual" => $this->sindicatoRepository->buscarPorIdBasico(
+                $this->tenantContext->get() ?? 1,
+            ),
         ];
-
-        return $this->cached;
     }
 }

@@ -8,16 +8,12 @@ use Latte\Engine;
 
 final readonly class LatteRenderer implements RendererInterface
 {
-    public function __construct(
-        private Engine $latte,
-    ) {
-    }
+    public function __construct(private Engine $latte) {}
 
     public function render(string $template, array $params = []): void
     {
         $this->latte->render($template, $params);
     }
-
 
     public function renderToString(string $template, array $params = []): string
     {

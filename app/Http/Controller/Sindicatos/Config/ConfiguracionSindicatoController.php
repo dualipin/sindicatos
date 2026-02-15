@@ -123,6 +123,46 @@ final readonly class ConfiguracionSindicatoController
                         $this->repository->guardarValores($sindicatoId, $metas);
                     }
 
+                    // Procesar integrantes del comité si vienen en el POST (estructura: comite[id][], comite[puesto_id][], comite[nombre][], comite[periodo_inicio][], comite[periodo_fin][], comite[biografia][])
+                    $rawComite = $postData['comite'] ?? null;
+                    if (is_array($rawComite)) {
+                        $integrantes = [];
+
+                        $ids = $rawComite['id'] ?? [];
+                        $puestos = $rawComite['puesto_id'] ?? [];
+                        $nombres = $rawComite['nombre'] ?? [];
+                        $periodosInicio = $rawComite['periodo_inicio'] ?? [];
+                        $periodosFin = $rawComite['periodo_fin'] ?? [];
+                        $biografias = $rawComite['biografia'] ?? [];
+
+                        $count = max(count($nombres), count($puestos));
+                        for ($i = 0; $i < $count; $i++) {
+                            $nombre = trim((string) ($nombres[$i] ?? ''));
+                            $puestoId = isset($puestos[$i]) ? (int) $puestos[$i] : 0;
+
+                            // Si no hay nombre ni puesto, ignorar la entrada
+                            if ($nombre === '' && $puestoId <= 0) {
+                                continue;
+                            }
+
+                            $integrantes[] = [
+                                'id' => isset($ids[$i]) && $ids[$i] !== '' ? (int) $ids[$i] : null,
+                                'puestoId' => $puestoId,
+                                'nombre' => $nombre,
+                                'periodoInicio' => isset($periodosInicio[$i]) && $periodosInicio[$i] !== '' ? $periodosInicio[$i] : null,
+                                'periodoFin' => isset($periodosFin[$i]) && $periodosFin[$i] !== '' ? $periodosFin[$i] : null,
+                                'biografia' => isset($biografias[$i]) ? trim((string) $biografias[$i]) : null,
+                            ];
+                        }
+
+                        if (!empty($integrantes)) {
+                            $this->repository->syncIntegrantesComite($sindicatoId, $integrantes);
+                        } else {
+                            // si el formulario envía lista vacía explícita, desactivamos todos
+                            $this->repository->syncIntegrantesComite($sindicatoId, []);
+                        }
+                    }
+
                     $this->redirector
                         ->to("/portal/sindicatos/configuracion.php", [
                             "success" => "updated",
@@ -146,10 +186,16 @@ final readonly class ConfiguracionSindicatoController
         $valores = $this->repository->obtenerValores($sindicatoId) ?? [];
         $metas = array_map(fn($v) => $v->valor, $valores);
 
+        // Obtener integrantes del comité y puestos para la sección administrativa
+        $comite = $this->repository->obtenerIntegrantesComiteActivos($sindicatoId) ?? [];
+        $puestosComite = $this->repository->obtenerPuestos($sindicatoId) ?? [];
+
         $context = $this->viewContextProvider->get();
         $context["usuario"] = $usuario;
         $context["sindicato"] = $sindicato;
         $context["metas"] = $metas;
+        $context["comite"] = $comite;
+        $context["puestosComite"] = $puestosComite;
         $context["success"] = $query["success"] ?? null;
         $context["error"] = $error;
 

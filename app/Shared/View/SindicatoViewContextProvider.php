@@ -34,7 +34,7 @@ final class SindicatoViewContextProvider extends AbstractViewContextProvider
         $metas = array_map(fn($v) => $v->valor, $valores);
 
         // Verificar existencia de imagenes en disco y normalizar foto de integrante
-        $uploadBase = rtrim($this->settings->upload->publicDir, '/') . '/';
+        $uploadBase = rtrim($this->settings->upload->publicDir, "/") . "/";
         $sindicatoLogoPath = null;
         if (!empty($sindicatoBasic?->logo)) {
             $candidate = $uploadBase . $sindicatoBasic->logo;
@@ -43,8 +43,11 @@ final class SindicatoViewContextProvider extends AbstractViewContextProvider
             }
         }
 
-        $normalizedComite = array_map(function ($m) use ($sindicatoLogoPath, $uploadBase) {
-            $foto = $m['foto'] ?? null;
+        $normalizedComite = array_map(function ($m) use (
+            $sindicatoLogoPath,
+            $uploadBase,
+        ) {
+            $foto = $m["foto"] ?? null;
             if ($foto) {
                 if (!is_file($uploadBase . $foto)) {
                     $foto = null; // archivo no existe
@@ -56,32 +59,33 @@ final class SindicatoViewContextProvider extends AbstractViewContextProvider
             }
 
             return [
-                'id' => $m['id'] ?? $m['integrante_id'] ?? null,
-                'sindicatoId' => $m['sindicatoId'] ?? $m['sindicato_id'] ?? null,
-                'puesto' => $m['puesto'] ?? $m['puesto_nombre'] ?? null,
-                'nombre' => $m['nombre'] ?? null,
-                'periodoInicio' => $m['periodoInicio'] ?? null,
-                'periodoFin' => $m['periodoFin'] ?? null,
-                'foto' => $foto,
-                'biografia' => $m['biografia'] ?? null,
-                'activo' => $m['activo'] ?? true,
+                "id" => $m["id"] ?? ($m["integrante_id"] ?? null),
+                "sindicatoId" =>
+                    $m["sindicatoId"] ?? ($m["sindicato_id"] ?? null),
+                "puesto" => $m["puesto"] ?? ($m["puesto_nombre"] ?? null),
+                "nombre" => $m["nombre"] ?? null,
+                "periodoInicio" => $m["periodoInicio"] ?? null,
+                "periodoFin" => $m["periodoFin"] ?? null,
+                "foto" => $foto,
+                "biografia" => $m["biografia"] ?? null,
+                "activo" => $m["activo"] ?? true,
             ];
         }, $comite);
 
         $contextoAcerca = (object) [
-            'datos' => [
-                'mision' => $sindicatoFull?->mision ?? '',
-                'vision' => $sindicatoFull?->vision ?? '',
-                'objetivos' => $sindicatoFull?->objetivo ?? '',
-                'compromiso' => $sindicatoFull?->compromiso ?? '',
-                'metas' => $metas,
+            "datos" => [
+                "mision" => $sindicatoFull?->mision ?? "",
+                "vision" => $sindicatoFull?->vision ?? "",
+                "objetivos" => $sindicatoFull?->objetivo ?? "",
+                "compromiso" => $sindicatoFull?->compromiso ?? "",
+                "metas" => $metas,
             ],
-            'comite' => $normalizedComite,
+            "comite" => $normalizedComite,
         ];
 
         return [
-            'sindicatoActual' => $sindicatoBasic,
-            'contextoAcerca' => $contextoAcerca,
+            "sindicatoActual" => $sindicatoBasic,
+            "contextoAcerca" => $contextoAcerca,
         ];
     }
 }

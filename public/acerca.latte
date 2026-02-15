@@ -49,39 +49,41 @@
                 <div class="flex-shrink-0">
                   {var $fotoPath = $miembro['foto'] ?? $sindicatoActual?->logo}
                   {if $fotoPath}
-                    <img src="{resolveUploadUrl($fotoPath)}" alt="{$miembro['nombre']}" class="rounded-circle object-fit-cover" width="72" height="72">
+                  <img src="{resolveUploadUrl($fotoPath)}" alt="{$miembro['nombre']}"
+                    class="rounded-circle object-fit-cover" width="72" height="72">
                   {else}
-                    <img src="{resolveUrl('assets/images/logo.jpg')}" alt="{$miembro['nombre']}" class="rounded-circle" width="72" height="72">
+                  <img src="{resolveUrl('assets/images/logo.jpg')}" alt="{$miembro['nombre']}" class="rounded-circle"
+                    width="72" height="72">
                   {/if}
                 </div>
                 <div class="flex-grow-1 w-100">
                   <div class="fw-semibold text-break">{$miembro['nombre']}
-                  <div class="small text-muted text-break">{$miembro['puesto'] ?? 'Miembro'}</div>
-                  {if $miembro['biografia']}
+                    <div class="small text-muted text-break">{$miembro['puesto'] ?? 'Miembro'}</div>
+                    {if $miembro['biografia']}
                     <div class="mt-2 small text-muted">{$miembro['biografia']}</div>
-                  {/if}
+                    {/if}
+                  </div>
                 </div>
               </div>
+              {/foreach}
             </div>
-            {/foreach}
-          </div>
-          {else}
-          <img class="img-fluid rounded-4" src="/assets/images/about_2-min.jpg" alt="Imagen Sindicato"
-            data-aos="fade-up" data-aos-delay="0">
-          {/if}
+            {else}
+            <img class="img-fluid rounded-4" src="/assets/images/about_2-min.jpg" alt="Imagen Sindicato"
+              data-aos="fade-up" data-aos-delay="0">
+            {/if}
 
-          <div class="mission-statement p-4 rounded-4 d-flex gap-4 mt-3" data-aos="fade-up" data-aos-delay="100">
-            <div class="mission-icon text-center rounded-circle text-white"><i
-                class="bi bi-lightbulb fs-4 text-white"></i></div>
-            <div>
-              <h3 class="text-uppercase fw-bold fs-5 text-white">Compromiso</h3>
-              <p class="fs-6 mb-0">{$contextoAcerca->datos['compromiso'] ?? 'Nuestro compromiso es defender y mejorar
-                las condiciones de nuestros agremiados.'}</p>
+            <div class="mission-statement p-4 rounded-4 d-flex gap-4 mt-3" data-aos="fade-up" data-aos-delay="100">
+              <div class="mission-icon text-center rounded-circle text-white"><i
+                  class="bi bi-lightbulb fs-4 text-white"></i></div>
+              <div>
+                <h3 class="text-uppercase fw-bold fs-5 text-white">Compromiso</h3>
+                <p class="fs-6 mb-0">{$contextoAcerca->datos['compromiso'] ?? 'Nuestro compromiso es defender y mejorar
+                  las condiciones de nuestros agremiados.'}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </section>
 {/block}

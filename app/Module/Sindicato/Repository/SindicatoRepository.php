@@ -311,6 +311,107 @@ final readonly class SindicatoRepository
         return (int) $stmt->fetchColumn();
     }
 
+    /**
+     * Devuelve los puestos definidos para un sindicato (ordenados por jerarquía).
+     * @return array<int,array{id:int,nombre:string}>|null
+     */
+    public function obtenerPuestos(int $sindicatoId): ?array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT puesto_id, nombre_puesto FROM sindicato_puestos WHERE sindicato_id = :sindicato_id ORDER BY orden_jerarquico ASC",
+        );
+        $stmt->execute(["sindicato_id" => $sindicatoId]);
+        $rows = $stmt->fetchAll();
+        if (!$rows) {
+            return null;
+        }
+
+        return array_map(fn($r) => ['id' => (int)$r['puesto_id'], 'nombre' => $r['nombre_puesto']], $rows);
+    }
+
+    /**
+     * Sincroniza la lista de integrantes del comité para un sindicato.
+     * - Inserta nuevos integrantes
+     * - Actualiza los existentes (por integrante_id)
+     * - Marca como inactivos los que ya no aparecen en la lista enviada
+     *
+     * Formato esperado de $integrantes: array of [
+     *   'id' => ?int, 'puestoId' => int, 'nombre' => string,
+     *   'periodoInicio' => ?string (YYYY-MM-DD), 'periodoFin' => ?string, 'biografia' => ?string
+     * ]
+     */
+    public function syncIntegrantesComite(int $sindicatoId, array $integrantes): void
+    {
+        $this->pdo->beginTransaction();
+        try {
+            // obtener integrantes actuales
+            $stmt = $this->pdo->prepare(
+                "SELECT integrante_id FROM sindicato_integrante_comite WHERE sindicato_id = :sindicato_id",
+            );
+            $stmt->execute(['sindicato_id' => $sindicatoId]);
+            $rows = $stmt->fetchAll();
+            $existingIds = array_map(fn($r) => (int)$r['integrante_id'], $rows);
+
+            $seen = [];
+
+            $ins = $this->pdo->prepare(
+                "INSERT INTO sindicato_integrante_comite (sindicato_id, puesto_id, nombre, periodo_inicio, periodo_fin, foto, biografia, activo) VALUES (:sindicato_id, :puesto_id, :nombre, :periodo_inicio, :periodo_fin, :foto, :biografia, :activo)",
+            );
+
+            $upd = $this->pdo->prepare(
+                "UPDATE sindicato_integrante_comite SET puesto_id = :puesto_id, nombre = :nombre, periodo_inicio = :periodo_inicio, periodo_fin = :periodo_fin, biografia = :biografia, activo = :activo WHERE integrante_id = :id",
+            );
+
+            foreach ($integrantes as $it) {
+                $id = isset($it['id']) && $it['id'] ? (int)$it['id'] : null;
+                $puestoId = (int) ($it['puestoId'] ?? 0);
+                $nombre = trim((string) ($it['nombre'] ?? ''));
+                $periodoInicio = $it['periodoInicio'] !== '' && $it['periodoInicio'] !== null ? $it['periodoInicio'] : null;
+                $periodoFin = $it['periodoFin'] !== '' && $it['periodoFin'] !== null ? $it['periodoFin'] : null;
+                $biografia = isset($it['biografia']) ? $it['biografia'] : null;
+
+                if ($id !== null && in_array($id, $existingIds, true)) {
+                    $upd->execute([
+                        'id' => $id,
+                        'puesto_id' => $puestoId,
+                        'nombre' => $nombre,
+                        'periodo_inicio' => $periodoInicio,
+                        'periodo_fin' => $periodoFin,
+                        'biografia' => $biografia,
+                        'activo' => 1,
+                    ]);
+                    $seen[] = $id;
+                } else {
+                    $ins->execute([
+                        'sindicato_id' => $sindicatoId,
+                        'puesto_id' => $puestoId,
+                        'nombre' => $nombre,
+                        'periodo_inicio' => $periodoInicio,
+                        'periodo_fin' => $periodoFin,
+                        'foto' => null,
+                        'biografia' => $biografia,
+                        'activo' => 1,
+                    ]);
+                    $seen[] = (int)$this->pdo->lastInsertId();
+                }
+            }
+
+            // marcar como inactivos los que no fueron enviados
+            $toDisable = array_diff($existingIds, $seen);
+            if (!empty($toDisable)) {
+                $placeholders = implode(',', array_fill(0, count($toDisable), '?'));
+                $sql = "UPDATE sindicato_integrante_comite SET activo = 0 WHERE integrante_id IN ($placeholders)";
+                $stmt2 = $this->pdo->prepare($sql);
+                $stmt2->execute(array_values($toDisable));
+            }
+
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
+
     //
     //
     //    public function buscarPorId(int $id): ?Sindicato

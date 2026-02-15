@@ -9,10 +9,7 @@ use PDO;
 
 final readonly class SindicatoRepository
 {
-    public function __construct(
-        private PDO $pdo,
-    ) {
-    }
+    public function __construct(private PDO $pdo) {}
 
     /**
      * @return list<SindicatoInfo>|null
@@ -22,7 +19,7 @@ final readonly class SindicatoRepository
         $stmt = $this->pdo->query(
             "
         select sindicato_id, nombre, abreviacion from sindicatos where activo = true
-        "
+        ",
         );
 
         $results = $stmt->fetchAll();
@@ -36,7 +33,7 @@ final readonly class SindicatoRepository
                 nombre: $row["nombre"],
                 abreviacion: $row["abreviacion"],
             ),
-            $results
+            $results,
         );
     }
 
@@ -46,11 +43,11 @@ final readonly class SindicatoRepository
             "
         select sindicato_id, nombre, abreviacion, logo, direccion, eslogan, correo, sitio_web, facebook, telefono, activo
         from sindicatos where sindicato_id = :id
-        "
+        ",
         );
 
         $stmt->execute([
-            'id' => $id,
+            "id" => $id,
         ]);
 
         $row = $stmt->fetch();
@@ -69,47 +66,68 @@ final readonly class SindicatoRepository
             sitioWeb: $row["sitio_web"] ?? null,
             logo: $row["logo"] ?? null,
             eslogan: $row["eslogan"] ?? null,
-            activo: (bool)$row["activo"],
+            activo: (bool) $row["activo"],
         );
     }
 
+    public function contarPuestos(int $sindicatoId): int
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*) FROM sindicato_puestos WHERE sindicato_id = :sindicato_id",
+        );
+        $stmt->execute(["sindicato_id" => $sindicatoId]);
+        return (int) $stmt->fetchColumn();
+    }
 
-//
-//
-//    public function buscarPorId(int $id): ?Sindicato
-//    {
-//        $stmt = $this->pdo->prepare(
-//            "
-//        select * from sindicatos where sindicato_id = :id"
-//        );
-//
-//        $stmt->execute([
-//            'id' => $id,
-//        ]);
-//
-//
-//        $row = $stmt->fetch();
-//        if (!$row) {
-//            return null;
-//        }
-//
-//        return new Sindicato(
-//            nombre: $row["nombre"],
-//            abreviacion: $row["abreviacion"],
-//            id: $row["sindicato_id"],
-//            sitioWeb: $row['sitio_web'] ?? '',
-//            telefono: $row['telefono'] ?? '',
-//            correo: $row['correo'] ?? '',
-//            facebook: $row['facebook'] ?? '',
-//            direccion: $row['direccion'] ?? '',
-//            eslogan: $row['eslogan'] ?? '',
-//            vision: $row['vision'] ?? '',
-//            rfc: $row['rfc'] ?? '',
-//            logo: $row['logo'] ?? '',
-//            representanteLegal: $row['representanteLegal'] ?? '',
-//            compromiso: $row['compromiso'] ?? '',
-//            mision: $row['mision'] ?? '',
-//            activo: (bool)$row["activo"]
-//        );
-//    }
+    public function contarIntegrantesActivos(int $sindicatoId): int
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*)
+            FROM sindicato_integrante_comite
+            WHERE sindicato_id = :sindicato_id
+              AND activo = 1
+              AND (periodo_fin IS NULL OR periodo_fin >= CURDATE())
+        ");
+        $stmt->execute(["sindicato_id" => $sindicatoId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    //
+    //
+    //    public function buscarPorId(int $id): ?Sindicato
+    //    {
+    //        $stmt = $this->pdo->prepare(
+    //            "
+    //        select * from sindicatos where sindicato_id = :id"
+    //        );
+    //
+    //        $stmt->execute([
+    //            'id' => $id,
+    //        ]);
+    //
+    //
+    //        $row = $stmt->fetch();
+    //        if (!$row) {
+    //            return null;
+    //        }
+    //
+    //        return new Sindicato(
+    //            nombre: $row["nombre"],
+    //            abreviacion: $row["abreviacion"],
+    //            id: $row["sindicato_id"],
+    //            sitioWeb: $row['sitio_web'] ?? '',
+    //            telefono: $row['telefono'] ?? '',
+    //            correo: $row['correo'] ?? '',
+    //            facebook: $row['facebook'] ?? '',
+    //            direccion: $row['direccion'] ?? '',
+    //            eslogan: $row['eslogan'] ?? '',
+    //            vision: $row['vision'] ?? '',
+    //            rfc: $row['rfc'] ?? '',
+    //            logo: $row['logo'] ?? '',
+    //            representanteLegal: $row['representanteLegal'] ?? '',
+    //            compromiso: $row['compromiso'] ?? '',
+    //            mision: $row['mision'] ?? '',
+    //            activo: (bool)$row["activo"]
+    //        );
+    //    }
 }

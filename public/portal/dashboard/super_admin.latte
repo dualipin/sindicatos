@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="col">
-         <div class="card h-100 border-success shadow-sm">
+        <div class="card h-100 border-success shadow-sm">
             <div class="card-body">
                 <h5 class="card-title text-success"><i class="bi bi-graph-up-arrow"></i> Recuperación</h5>
                 <p class="h3 my-3">{$metrics['recuperacion']|number:0}%</p>
@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-     <div class="col">
+    <div class="col">
         <div class="card h-100 border-warning shadow-sm">
             <div class="card-body">
                 <h5 class="card-title text-warning"><i class="bi bi-people"></i> Usuarios Activos</h5>
@@ -43,11 +43,17 @@
         </div>
     </div>
     <div class="col">
-         <div class="card h-100 border-danger shadow-sm">
+        <div class="card h-100 border-danger shadow-sm">
             <div class="card-body">
                 <h5 class="card-title text-danger"><i class="bi bi-exclamation-triangle"></i> Alertas</h5>
-                <p class="h3 my-3">0</p>
-                <small class="text-muted">Configuraciones pendientes</small>
+                <p class="h3 my-3">{$metrics['alertas']}</p>
+                <small class="text-muted">
+                    {if $metrics['alertas'] > 0}
+                    {$metrics['alertas_detalle']}
+                    {else}
+                    Sin pendientes criticos
+                    {/if}
+                </small>
             </div>
         </div>
     </div>
@@ -79,16 +85,32 @@
                 <h5 class="mb-0">Estado del Comité</h5>
             </div>
             <div class="card-body">
+                {if $metrics['comite_completo']}
                 <div class="alert alert-success d-flex align-items-center" role="alert">
                     <i class="bi bi-check-circle-fill flex-shrink-0 me-2"></i>
-                    <div>Todas las posiciones del comité están vigentes.</div>
+                    <div>
+                        Todas las posiciones del comité están vigentes.
+                        <small class="text-muted d-block">{$metrics['comite_activos']} de {$metrics['comite_puestos']}
+                            puestos</small>
+                    </div>
                 </div>
+                {else}
+                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                    <i class="bi bi-exclamation-circle-fill flex-shrink-0 me-2"></i>
+                    <div>
+                        Hay vacantes en el comité.
+                        <small class="text-muted d-block">{$metrics['comite_activos']} de {$metrics['comite_puestos']}
+                            puestos</small>
+                    </div>
+                </div>
+                {/if}
             </div>
         </div>
     </div>
 </div>
 
-<div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center pt-3 pb-2 mb-3 border-top">
+<div
+    class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center pt-3 pb-2 mb-3 border-top">
     <div>
         <h2 class="h4 mb-1">Seguridad y Acceso</h2>
         <p class="text-muted mb-0">Vista administrativa para multi-sindicato (Super Admin).</p>
@@ -100,36 +122,43 @@
 
 <ul class="nav nav-pills mb-3" id="seguridad-tabs" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="tab-permisos" data-bs-toggle="pill" data-bs-target="#pane-permisos" type="button" role="tab" aria-controls="pane-permisos" aria-selected="true">
+        <button class="nav-link active" id="tab-permisos" data-bs-toggle="pill" data-bs-target="#pane-permisos"
+            type="button" role="tab" aria-controls="pane-permisos" aria-selected="true">
             <i class="bi bi-grid-3x3-gap me-1"></i>Permisos
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-roles" data-bs-toggle="pill" data-bs-target="#pane-roles" type="button" role="tab" aria-controls="pane-roles" aria-selected="false">
+        <button class="nav-link" id="tab-roles" data-bs-toggle="pill" data-bs-target="#pane-roles" type="button"
+            role="tab" aria-controls="pane-roles" aria-selected="false">
             <i class="bi bi-diagram-3 me-1"></i>Roles
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-usuarios" data-bs-toggle="pill" data-bs-target="#pane-usuarios" type="button" role="tab" aria-controls="pane-usuarios" aria-selected="false">
+        <button class="nav-link" id="tab-usuarios" data-bs-toggle="pill" data-bs-target="#pane-usuarios" type="button"
+            role="tab" aria-controls="pane-usuarios" aria-selected="false">
             <i class="bi bi-people me-1"></i>Usuarios
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-auditoria" data-bs-toggle="pill" data-bs-target="#pane-auditoria" type="button" role="tab" aria-controls="pane-auditoria" aria-selected="false">
+        <button class="nav-link" id="tab-auditoria" data-bs-toggle="pill" data-bs-target="#pane-auditoria" type="button"
+            role="tab" aria-controls="pane-auditoria" aria-selected="false">
             <i class="bi bi-clipboard-check me-1"></i>Auditoria
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-externos" data-bs-toggle="pill" data-bs-target="#pane-externos" type="button" role="tab" aria-controls="pane-externos" aria-selected="false">
+        <button class="nav-link" id="tab-externos" data-bs-toggle="pill" data-bs-target="#pane-externos" type="button"
+            role="tab" aria-controls="pane-externos" aria-selected="false">
             <i class="bi bi-person-plus me-1"></i>Externos
         </button>
     </li>
 </ul>
 
 <div class="tab-content" id="seguridad-tabs-content">
-    <div class="tab-pane fade show active" id="pane-permisos" role="tabpanel" aria-labelledby="tab-permisos" tabindex="0">
+    <div class="tab-pane fade show active" id="pane-permisos" role="tabpanel" aria-labelledby="tab-permisos"
+        tabindex="0">
         <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center">
+            <div
+                class="card-header bg-white d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center">
                 <div>
                     <h5 class="mb-1">Gestion de Permisos (Catalogo Maestro)</h5>
                     <small class="text-muted">Solo Super Admin global.</small>
@@ -232,7 +261,8 @@
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Gestion de Roles</h5>
-                <button type="button" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo rol</button>
+                <button type="button" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo
+                    rol</button>
             </div>
             <div class="card-body">
                 <div class="table-responsive mb-4">
@@ -261,8 +291,10 @@
                                 <td><span class="badge text-bg-info">Personalizado</span></td>
                                 <td>2</td>
                                 <td class="text-end">
-                                    <button type="button" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary"><i
+                                            class="bi bi-pencil"></i></button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger"><i
+                                            class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                             <tr>
@@ -270,8 +302,10 @@
                                 <td><span class="badge text-bg-info">Personalizado</span></td>
                                 <td>5</td>
                                 <td class="text-end">
-                                    <button type="button" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary"><i
+                                            class="bi bi-pencil"></i></button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger"><i
+                                            class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -335,7 +369,8 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <small class="text-muted">Los roles de sistema estan protegidos contra edicion o eliminacion.</small>
+                            <small class="text-muted">Los roles de sistema estan protegidos contra edicion o
+                                eliminacion.</small>
                         </div>
                     </div>
                 </div>
@@ -387,9 +422,12 @@
                 </div>
 
                 <div class="d-flex flex-wrap gap-2 mb-3">
-                    <button type="button" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i>Activar</button>
-                    <button type="button" class="btn btn-outline-warning"><i class="bi bi-slash-circle me-1"></i>Desactivar</button>
-                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-download me-1"></i>Exportar expedientes</button>
+                    <button type="button" class="btn btn-outline-success"><i
+                            class="bi bi-check-circle me-1"></i>Activar</button>
+                    <button type="button" class="btn btn-outline-warning"><i
+                            class="bi bi-slash-circle me-1"></i>Desactivar</button>
+                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-download me-1"></i>Exportar
+                        expedientes</button>
                 </div>
 
                 <div class="table-responsive mb-4">
@@ -440,23 +478,35 @@
                         <h6 class="mb-3">Detalle del expediente</h6>
                         <ul class="nav nav-tabs" id="usuario-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tab-general" data-bs-toggle="tab" data-bs-target="#pane-general" type="button" role="tab" aria-controls="pane-general" aria-selected="true">Informacion general</button>
+                                <button class="nav-link active" id="tab-general" data-bs-toggle="tab"
+                                    data-bs-target="#pane-general" type="button" role="tab" aria-controls="pane-general"
+                                    aria-selected="true">Informacion general</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-seguridad" data-bs-toggle="tab" data-bs-target="#pane-seguridad" type="button" role="tab" aria-controls="pane-seguridad" aria-selected="false">Seguridad y roles</button>
+                                <button class="nav-link" id="tab-seguridad" data-bs-toggle="tab"
+                                    data-bs-target="#pane-seguridad" type="button" role="tab"
+                                    aria-controls="pane-seguridad" aria-selected="false">Seguridad y roles</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-documentos" data-bs-toggle="tab" data-bs-target="#pane-documentos" type="button" role="tab" aria-controls="pane-documentos" aria-selected="false">Validacion documental</button>
+                                <button class="nav-link" id="tab-documentos" data-bs-toggle="tab"
+                                    data-bs-target="#pane-documentos" type="button" role="tab"
+                                    aria-controls="pane-documentos" aria-selected="false">Validacion documental</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-finanzas" data-bs-toggle="tab" data-bs-target="#pane-finanzas" type="button" role="tab" aria-controls="pane-finanzas" aria-selected="false">Configuracion financiera</button>
+                                <button class="nav-link" id="tab-finanzas" data-bs-toggle="tab"
+                                    data-bs-target="#pane-finanzas" type="button" role="tab"
+                                    aria-controls="pane-finanzas" aria-selected="false">Configuracion
+                                    financiera</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-historial" data-bs-toggle="tab" data-bs-target="#pane-historial" type="button" role="tab" aria-controls="pane-historial" aria-selected="false">Historial</button>
+                                <button class="nav-link" id="tab-historial" data-bs-toggle="tab"
+                                    data-bs-target="#pane-historial" type="button" role="tab"
+                                    aria-controls="pane-historial" aria-selected="false">Historial</button>
                             </li>
                         </ul>
                         <div class="tab-content border border-top-0 bg-white p-3" id="usuario-tabs-content">
-                            <div class="tab-pane fade show active" id="pane-general" role="tabpanel" aria-labelledby="tab-general" tabindex="0">
+                            <div class="tab-pane fade show active" id="pane-general" role="tabpanel"
+                                aria-labelledby="tab-general" tabindex="0">
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <div class="border rounded p-3 text-center">
@@ -469,7 +519,8 @@
                                         <div class="row g-2">
                                             <div class="col-md-6">
                                                 <label class="form-label">Correo</label>
-                                                <input type="text" class="form-control" value="mariana@correo.mx" readonly>
+                                                <input type="text" class="form-control" value="mariana@correo.mx"
+                                                    readonly>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Telefono</label>
@@ -487,7 +538,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="pane-seguridad" role="tabpanel" aria-labelledby="tab-seguridad" tabindex="0">
+                            <div class="tab-pane fade" id="pane-seguridad" role="tabpanel"
+                                aria-labelledby="tab-seguridad" tabindex="0">
                                 <label class="form-label">Roles asignados</label>
                                 <select class="form-select" multiple>
                                     <option selected>Agremiado</option>
@@ -495,15 +547,18 @@
                                     <option>Vocal</option>
                                 </select>
                             </div>
-                            <div class="tab-pane fade" id="pane-documentos" role="tabpanel" aria-labelledby="tab-documentos" tabindex="0">
+                            <div class="tab-pane fade" id="pane-documentos" role="tabpanel"
+                                aria-labelledby="tab-documentos" tabindex="0">
                                 <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
                                     <div>
                                         <div class="fw-semibold">INE</div>
                                         <small class="text-muted">Subido el 10/02/2026</small>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <button type="button" class="btn btn-success btn-sm"><i class="bi bi-check-lg me-1"></i>Aprobar</button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="collapse" data-bs-target="#motivo-rechazo">Rechazar</button>
+                                        <button type="button" class="btn btn-success btn-sm"><i
+                                                class="bi bi-check-lg me-1"></i>Aprobar</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                            data-bs-toggle="collapse" data-bs-target="#motivo-rechazo">Rechazar</button>
                                     </div>
                                 </div>
                                 <div class="collapse mt-3" id="motivo-rechazo">
@@ -511,7 +566,8 @@
                                     <textarea class="form-control" rows="2" placeholder="Escribe el motivo"></textarea>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="pane-finanzas" role="tabpanel" aria-labelledby="tab-finanzas" tabindex="0">
+                            <div class="tab-pane fade" id="pane-finanzas" role="tabpanel" aria-labelledby="tab-finanzas"
+                                tabindex="0">
                                 <div class="row g-2">
                                     <div class="col-md-6">
                                         <label class="form-label">Salario quincenal</label>
@@ -533,7 +589,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="pane-historial" role="tabpanel" aria-labelledby="tab-historial" tabindex="0">
+                            <div class="tab-pane fade" id="pane-historial" role="tabpanel"
+                                aria-labelledby="tab-historial" tabindex="0">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between">
                                         <span>Inicio de sesion</span>
@@ -650,7 +707,8 @@
                                 </td>
                                 <td>11/02/2026</td>
                                 <td class="text-end">
-                                    <button type="button" class="btn btn-sm btn-outline-success">Convertir en Agremiado</button>
+                                    <button type="button" class="btn btn-sm btn-outline-success">Convertir en
+                                        Agremiado</button>
                                 </td>
                             </tr>
                         </tbody>

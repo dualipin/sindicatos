@@ -5,7 +5,7 @@
 {block content}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Panel de Finanzas</h1>
-     <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-toolbar mb-2 mb-md-0">
         <button type="button" class="btn btn-sm btn-primary">
             <i class="bi bi-calculator"></i> Simulador Rápido
         </button>
@@ -40,11 +40,15 @@
                         <h3>-${$metrics['flujo_mensual']['total_egresos']|number:2}</h3>
                     </div>
                 </div>
-                 <div class="mt-3">
-                     <!-- Aquí iría un gráfico real, placeholder por ahora -->
-                     <div class="progress" role="progressbar" aria-label="Ingresos vs Egresos" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
-                        <div class="progress-bar bg-success" style="width: 60%">Ingresos</div>
-                        <div class="progress-bar bg-danger" style="width: 25%">Egresos</div>
+                <div class="mt-3">
+                    <div class="progress" role="progressbar" aria-label="Ingresos vs Egresos" aria-valuemin="0"
+                        aria-valuemax="100">
+                        <div class="progress-bar bg-success" data-progress="{$metrics['flujo_porcentaje_ingresos']}">
+                            Ingresos {$metrics['flujo_porcentaje_ingresos']}%
+                        </div>
+                        <div class="progress-bar bg-danger" data-progress="{$metrics['flujo_porcentaje_egresos']}">
+                            Egresos {$metrics['flujo_porcentaje_egresos']}%
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,16 +81,17 @@
                     <td>${$solicitud['monto_solicitado']|number:2}</td>
                     <td>
                         {if $solicitud['estado'] == 'revision_documental'}
-                            <span class="badge bg-info text-dark">Revision Documental</span>
+                        <span class="badge bg-info text-dark">Revision Documental</span>
                         {elseif $solicitud['estado'] == 'validacion_firmas'}
-                            <span class="badge bg-warning text-dark">Validación Firmas</span>
+                        <span class="badge bg-warning text-dark">Validación Firmas</span>
                         {else}
-                            <span class="badge bg-secondary">{$solicitud['estado']}</span>
+                        <span class="badge bg-secondary">{$solicitud['estado']}</span>
                         {/if}
                     </td>
                     <td>{$solicitud['fecha_solicitud']|date:'d/m/Y'}</td>
                     <td>
-                        <a href="/prestamos/validar.php?id={$solicitud['prestamo_id']}" class="btn btn-sm btn-outline-primary">Revisar</a>
+                        <a href="/prestamos/validar.php?id={$solicitud['prestamo_id']}"
+                            class="btn btn-sm btn-outline-primary">Revisar</a>
                     </td>
                 </tr>
                 {else}

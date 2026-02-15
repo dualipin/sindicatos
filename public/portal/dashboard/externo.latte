@@ -20,41 +20,41 @@
                 <i class="bi bi-stopwatch"></i> Estatus de mi Solicitud
             </div>
             <div class="card-body">
-                 {if empty($metrics['prestamos'])}
-                    <div class="text-center py-4">
-                        <p class="text-muted">No tienes solicitudes activas.</p>
-                        <a href="/prestamos/solicitar_externo.php" class="btn btn-primary">Iniciar Solicitud</a>
-                    </div>
+                {if empty($metrics['prestamo_actual'])}
+                <div class="text-center py-4">
+                    <p class="text-muted">No tienes solicitudes activas.</p>
+                    <a href="/prestamos/solicitar_externo.php" class="btn btn-primary">Iniciar Solicitud</a>
+                </div>
                 {else}
-                     {foreach $metrics['prestamos'] as $prestamo}
-                        <h5 class="card-title">Folio: {$prestamo['folio']}</h5>
-                        
-                        <!-- Timeline visual simple -->
-                        <div class="position-relative m-4">
-                            <div class="progress" role="progressbar" style="height: 2px;">
-                                <div class="progress-bar" style="width: 50%"></div>
-                            </div>
-                            <button type="button" class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-primary rounded-pill" style="width: 2rem; height:2rem;">1</button>
-                            <button type="button" class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-primary rounded-pill" style="width: 2rem; height:2rem;">2</button>
-                            <button type="button" class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-secondary rounded-pill" style="width: 2rem; height:2rem;">3</button>
-                            
-                             <div class="d-flex justify-content-between mt-2">
-                                <small>Solicitud</small>
-                                <small>Revisión</small>
-                                <small>Activo</small>
-                            </div>
-                        </div>
+                <h5 class="card-title">Folio: {$metrics['prestamo_actual']['folio']}</h5>
+                <div class="position-relative m-4">
+                    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" data-progress="{$metrics['timeline']['progreso']}"></div>
+                    </div>
+                    <button type="button"
+                        class="position-absolute top-0 start-0 translate-middle btn btn-sm rounded-pill px-2 {if $metrics['timeline']['paso'] >= 1}btn-primary{else}btn-secondary{/if}">1</button>
+                    <button type="button"
+                        class="position-absolute top-0 start-50 translate-middle btn btn-sm rounded-pill px-2 {if $metrics['timeline']['paso'] >= 2}btn-primary{else}btn-secondary{/if}">2</button>
+                    <button type="button"
+                        class="position-absolute top-0 start-100 translate-middle btn btn-sm rounded-pill px-2 {if $metrics['timeline']['paso'] >= 3}btn-primary{else}btn-secondary{/if}">3</button>
 
-                        <p class="mt-4"><strong>Estado actual:</strong> <span class="badge bg-primary">{$prestamo['estado']}</span></p>
-                        <hr>
-                     {/foreach}
+                    <div class="d-flex justify-content-between mt-2">
+                        <small>Solicitud</small>
+                        <small>Revisión</small>
+                        <small>Activo</small>
+                    </div>
+                </div>
+
+                <p class="mt-4"><strong>Estado actual:</strong> <span
+                        class="badge bg-primary">{$metrics['prestamo_actual']['estado']}</span></p>
+                <hr>
                 {/if}
             </div>
         </div>
-        
+
         <!-- Plan de Pagos -->
         <div class="card shadow-sm">
-             <div class="card-header bg-white">
+            <div class="card-header bg-white">
                 <i class="bi bi-table"></i> Plan de Pagos Simpificado
             </div>
             <div class="table-responsive">
@@ -68,18 +68,28 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {if empty($metrics['plan_pagos'])}
                         <tr>
-                            <td>1</td>
-                            <td>$1,500.00</td>
-                            <td>15/Feb/2026</td>
-                            <td><span class="badge bg-success">Pagado</span></td>
+                            <td colspan="4" class="text-center text-muted py-3">Sin plan de pagos disponible.</td>
                         </tr>
+                        {else}
+                        {foreach $metrics['plan_pagos'] as $pago}
                         <tr>
-                            <td>2</td>
-                            <td>$1,500.00</td>
-                            <td>28/Feb/2026</td>
-                            <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                            <td>{$pago['numero_pago']}</td>
+                            <td>${$pago['pago_total_programado']|number:2}</td>
+                            <td>{$pago['fecha_programada']|date:'d/m/Y'}</td>
+                            <td>
+                                {if $pago['estado_pago'] === 'pagado'}
+                                <span class="badge bg-success">Pagado</span>
+                                {elseif $pago['estado_pago'] === 'pendiente'}
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                {else}
+                                <span class="badge bg-secondary">{$pago['estado_pago']}</span>
+                                {/if}
+                            </td>
                         </tr>
+                        {/foreach}
+                        {/if}
                     </tbody>
                 </table>
             </div>
@@ -88,7 +98,7 @@
 
     <!-- Sidebar -->
     <div class="col-md-4">
-         <!-- Carga de Pagos -->
+        <!-- Carga de Pagos -->
         <div class="card shadow-sm mb-4 border-primary">
             <div class="card-body text-center">
                 <h5 class="card-title text-primary"><i class="bi bi-cloud-upload"></i> Cargar Comprobante</h5>
@@ -101,14 +111,16 @@
 
         <!-- Soporte -->
         <div class="card shadow-sm">
-             <div class="card-header bg-white">
+            <div class="card-header bg-white">
                 <i class="bi bi-headset"></i> Centro de Ayuda
             </div>
             <div class="card-body">
                 <p>¿Tienes dudas con tu saldo?</p>
                 <div class="d-grid gap-2">
-                    <a href="mailto:soporte@sindicato.com" class="btn btn-outline-secondary"><i class="bi bi-envelope"></i> Contactar Soporte</a>
-                    <a href="tel:+5255555555" class="btn btn-outline-secondary"><i class="bi bi-telephone"></i> Llamar</a>
+                    <a href="mailto:soporte@sindicato.com" class="btn btn-outline-secondary"><i
+                            class="bi bi-envelope"></i> Contactar Soporte</a>
+                    <a href="tel:+5255555555" class="btn btn-outline-secondary"><i class="bi bi-telephone"></i>
+                        Llamar</a>
                 </div>
             </div>
         </div>

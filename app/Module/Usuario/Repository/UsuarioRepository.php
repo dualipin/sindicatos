@@ -91,6 +91,79 @@ final class UsuarioRepository
         return $val ? (int) $val : null;
     }
 
+    public function contarActivos(int $sindicatoId): int
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*) FROM usuarios WHERE sindicato_id = :sindicato_id AND activo = 1",
+        );
+        $stmt->execute(["sindicato_id" => $sindicatoId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function contarDocumentosPendientes(int $sindicatoId): int
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*)
+            FROM usuario_documentacion ud
+            JOIN usuarios u ON u.usuario_id = ud.usuario_id
+            WHERE u.sindicato_id = :sindicato_id
+              AND ud.estado = 'pendiente'
+        ");
+        $stmt->execute(["sindicato_id" => $sindicatoId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * @return array<string, mixed>[]
+     */
+    public function obtenerDocumentosUsuario(string $usuarioId): array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT tipo_documento, estado, fecha_subida
+            FROM usuario_documentacion
+            WHERE usuario_id = :usuario_id
+            ORDER BY fecha_subida DESC
+        ");
+        $stmt->execute(["usuario_id" => $usuarioId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @return array<string, mixed>[]
+     */
+    public function obtenerCumpleanosSemana(int $sindicatoId): array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT usuario_id, nombre, apellidos, fecha_nacimiento,
+                   CASE
+                       WHEN STR_TO_DATE(
+                           CONCAT(YEAR(CURDATE()), '-', DATE_FORMAT(fecha_nacimiento, '%m-%d')),
+                           '%Y-%m-%d'
+                       ) < CURDATE()
+                       THEN DATE_ADD(
+                           STR_TO_DATE(
+                               CONCAT(YEAR(CURDATE()), '-', DATE_FORMAT(fecha_nacimiento, '%m-%d')),
+                               '%Y-%m-%d'
+                           ),
+                           INTERVAL 1 YEAR
+                       )
+                       ELSE STR_TO_DATE(
+                           CONCAT(YEAR(CURDATE()), '-', DATE_FORMAT(fecha_nacimiento, '%m-%d')),
+                           '%Y-%m-%d'
+                       )
+                   END AS proximo_cumple
+            FROM usuarios
+            WHERE sindicato_id = :sindicato_id
+              AND activo = 1
+              AND fecha_nacimiento IS NOT NULL
+            HAVING proximo_cumple BETWEEN CURDATE()
+                                  AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+            ORDER BY proximo_cumple ASC
+        ");
+        $stmt->execute(["sindicato_id" => $sindicatoId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /**
      * @return string[]
      */

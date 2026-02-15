@@ -10,12 +10,15 @@ final readonly class MensajeriaRepository
 
     public function contarHilosPendientes(int $sindicatoId): int
     {
-        // Asumiendo una tabla 'mensajeria_hilos' o similar.
-        // Si no existe, simularemos por ahora o ajustaremos según esquema real si existiera.
-        // Basándome en los directorios vistos, 'Mensajeria' existe pero no vi el esquema en database.sql.
-        // Revisaré database.sql nuevamente si es necesario, pero por el momento dejaré un placeholder seguro o 0.
-
-        // TODO: Implementar lógica real cuando exista tabla de mensajería.
-        return 0;
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(DISTINCT md.hilo_id)
+            FROM mensajes_detalle md
+            JOIN usuarios u ON u.usuario_id = md.autor_usuario_id
+            WHERE u.sindicato_id = :sindicato_id
+              AND md.es_respuesta_staff = 0
+              AND md.leido = 0
+        ");
+        $stmt->execute(["sindicato_id" => $sindicatoId]);
+        return (int) $stmt->fetchColumn();
     }
 }

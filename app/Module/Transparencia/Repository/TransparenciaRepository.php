@@ -8,6 +8,17 @@ final readonly class TransparenciaRepository
 {
     public function __construct(private PDO $pdo) {}
 
+    public function contarCategorias(int $sindicatoId): int
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*)
+            FROM transparencia_categorias
+            WHERE sindicato_id = :sindicato_id
+        ");
+        $stmt->execute(["sindicato_id" => $sindicatoId]);
+        return (int) $stmt->fetchColumn();
+    }
+
     public function contarDocumentosMes(
         int $sindicatoId,
         int $mes,

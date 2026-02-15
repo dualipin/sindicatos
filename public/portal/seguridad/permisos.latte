@@ -1,0 +1,159 @@
+{layout '../../../templates/portal-layout.latte'}
+
+{block title}Seguridad - Permisos{/block}
+
+{block main}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Catalogo de permisos</h1>
+        <p class="text-muted mb-0">Administra permisos y su descripcion tecnica.</p>
+    </div>
+    <span class="badge text-bg-primary"><i class="bi bi-shield-lock me-1"></i>Administracion</span>
+</div>
+
+{if $success === 'created'}
+<div class="alert alert-success" role="alert">Permiso creado correctamente.</div>
+{elseif $success === 'updated'}
+<div class="alert alert-success" role="alert">Permiso actualizado correctamente.</div>
+{/if}
+
+{if $error}
+<div class="alert alert-danger" role="alert">{$error}</div>
+{/if}
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Nuevo permiso</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/portal/seguridad/permisos.php">
+                    <input type="hidden" name="action" value="create">
+                    <div class="mb-3">
+                        <label class="form-label">Modulo</label>
+                        <input type="text" name="modulo" class="form-control" placeholder="usuarios">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Accion</label>
+                        <select name="accion" class="form-select">
+                            <option value="">Selecciona</option>
+                            <option value="crear">crear</option>
+                            <option value="leer">leer</option>
+                            <option value="actualizar">actualizar</option>
+                            <option value="eliminar">eliminar</option>
+                            <option value="aprobar">aprobar</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" name="nombre" class="form-control" placeholder="usuarios.leer">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descripcion</label>
+                        <textarea name="descripcion" class="form-control" rows="3"
+                            placeholder="Permite ver usuarios"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-plus-lg me-1"></i>Crear permiso
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div
+                class="card-header bg-white d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center">
+                <div>
+                    <h5 class="mb-1">Listado de permisos</h5>
+                    <small class="text-muted">Selecciona un permiso para editar.</small>
+                </div>
+                <div class="mt-2 mt-lg-0">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="search" class="form-control" placeholder="Buscar por modulo o nombre">
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Modulo</th>
+                                <th>Accion</th>
+                                <th>Nombre</th>
+                                <th>Descripcion</th>
+                                <th class="text-end">Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {if empty($permisos)}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No hay permisos registrados.</td>
+                            </tr>
+                            {else}
+                            {foreach $permisos as $permiso}
+                            <tr>
+                                <td>{$permiso['modulo']}</td>
+                                <td><span class="badge text-bg-light text-uppercase">{$permiso['accion']}</span></td>
+                                <td>{$permiso['nombre']}</td>
+                                <td class="text-muted">{$permiso['descripcion'] ?? '-'}</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary"
+                                        href="/portal/seguridad/permisos.php?edit={$permiso['permiso_id']}">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {/foreach}
+                            {/if}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{if $permisoEdit}
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Editar permiso</h5>
+        <a class="btn btn-sm btn-outline-secondary" href="/portal/seguridad/permisos.php">Cerrar</a>
+    </div>
+    <div class="card-body">
+        <form method="post" action="/portal/seguridad/permisos.php">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="permiso_id" value="{$permisoEdit['permiso_id']}">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Modulo</label>
+                    <input type="text" class="form-control" value="{$permisoEdit['modulo']}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Accion</label>
+                    <input type="text" class="form-control" value="{$permisoEdit['accion']}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" value="{$permisoEdit['nombre']}">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Descripcion</label>
+                    <textarea name="descripcion" class="form-control"
+                        rows="3">{$permisoEdit['descripcion'] ?? ''}</textarea>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save me-1"></i>Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{/if}
+{/block}

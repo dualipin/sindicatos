@@ -15,6 +15,7 @@ trigger: always_on
 - Prohibido crear clases o estilos personalizados, salvo que Bootstrap no cubra el caso. En ese supuesto, añade un comentario documentando el motivo.
 - Para iconos, usa exclusivamente Bootstrap Icons. Si el icono que necesitas no existe, consulta con el equipo antes de usar una librería externa o crear un SVG personalizado.
 - Para animaciones, usa exclusivamente Animate.css.
+- Mobile first
 
 ### Arquitectura
 

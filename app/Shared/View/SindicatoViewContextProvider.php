@@ -86,6 +86,7 @@ final class SindicatoViewContextProvider extends AbstractViewContextProvider
         return [
             "sindicatoActual" => $sindicatoBasic,
             "contextoAcerca" => $contextoAcerca,
+            "comite" => $normalizedComite,
         ];
     }
 }

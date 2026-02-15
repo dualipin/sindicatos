@@ -1,0 +1,250 @@
+{layout '../../../templates/portal-layout.latte'}
+
+{block title}Configuracion del sindicato{/block}
+
+{block main}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Configuracion del sindicato</h1>
+        <p class="text-muted mb-0">Aplica los ajustes institucionales del sindicato actual.</p>
+    </div>
+    <span class="badge text-bg-secondary"><i class="bi bi-sliders me-1"></i>Administracion</span>
+</div>
+
+<div class="alert alert-info d-flex align-items-center" role="alert">
+    <i class="bi bi-info-circle me-2"></i>
+    <div>Solo administradores del sindicato pueden aplicar cambios.</div>
+</div>
+
+{if $success === 'updated'}
+<div class="alert alert-success" role="alert">Configuracion actualizada correctamente.</div>
+{/if}
+
+{if $error}
+<div class="alert alert-danger" role="alert">{$error}</div>
+{/if}
+
+<form method="post" action="/portal/sindicatos/configuracion.php" enctype="multipart/form-data">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Datos generales</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nombre del sindicato</label>
+                    <input type="text" name="nombre" class="form-control" value="{$sindicato?->nombre}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Abreviacion</label>
+                    <input type="text" name="abreviacion" class="form-control" value="{$sindicato?->abreviacion}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">RFC</label>
+                    <input type="text" name="rfc" class="form-control" value="{$sindicato?->rfc}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Representante legal</label>
+                    <input type="text" name="representante_legal" class="form-control"
+                        value="{$sindicato?->representanteLegal}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Eslogan</label>
+                    <input type="text" name="eslogan" class="form-control" value="{$sindicato?->eslogan}">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Direccion</label>
+                    <textarea name="direccion" class="form-control" rows="2">{$sindicato?->direccion}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Contacto y enlaces</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Telefono</label>
+                    <input type="text" name="telefono" class="form-control" value="{$sindicato?->telefono}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Correo</label>
+                    <input type="email" name="correo" class="form-control" value="{$sindicato?->correo}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Sitio web</label>
+                    <input type="url" name="sitio_web" class="form-control" value="{$sindicato?->sitioWeb}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Facebook</label>
+                    <input type="url" name="facebook" class="form-control" value="{$sindicato?->facebook}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Logo del sindicato</label>
+                    <input type="file" name="logo_file" class="form-control" accept="image/png,image/jpeg,image/webp">
+                    <input type="hidden" name="logo_actual" value="{$sindicato?->logo}">
+                    <div class="form-text">Formatos permitidos: JPG, PNG, WEBP. Maximo 2MB.</div>
+                </div>
+                {if $sindicato?->logo}
+                <div class="col-12">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{resolveUploadUrl($sindicato?->logo)}" alt="Logo actual" class="img-thumbnail"
+                            width="64" height="64">
+                        <div>
+                            <div class="fw-semibold">Logo actual</div>
+                            <small class="text-muted">Se mantendra si no subes uno nuevo.</small>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Identidad institucional</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">Mision</label>
+                    <textarea name="mision" class="form-control" rows="2">{$sindicato?->mision}</textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Vision</label>
+                    <textarea name="vision" class="form-control" rows="2">{$sindicato?->vision}</textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Objetivo</label>
+                    <textarea name="objetivo" class="form-control" rows="2">{$sindicato?->objetivo}</textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Compromiso</label>
+                    <textarea name="compromiso" class="form-control" rows="2">{$sindicato?->compromiso}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Metas institucionales</h5>
+        </div>
+        <div class="card-body">
+            <div id="metas-list">
+                {foreach $metas ?? [] as $m}
+                <div class="input-group mb-2">
+                    <input type="text" name="metas[]" class="form-control" value="{$m}">
+                    <div class="btn-group ms-2" role="group" aria-label="Acciones">
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
+                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-meta" title="Eliminar"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+                {/foreach}
+
+                {if !$metas}
+                <div class="input-group mb-2">
+                    <input type="text" name="metas[]" class="form-control" value="">
+                    <div class="btn-group ms-2" role="group" aria-label="Acciones">
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-up" title="Subir"><i class="bi bi-chevron-up"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-move-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>
+                        <button type="button" class="btn btn-outline-danger btn-sm btn-remove-meta" title="Eliminar"><i class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+                {/if}
+            </div>
+            <div>
+                <button type="button" class="btn btn-sm btn-secondary" id="add-meta">Agregar meta</button>
+                <div class="form-text">Agrega metas institucionales que se mostrarán en la sección "Acerca". Usa las flechas para reordenar.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row gap-2">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save me-1"></i>Guardar configuracion
+        </button>
+        <a class="btn btn-outline-secondary" href="/portal/dashboard/index.php">Cancelar</a>
+    </div>
+</form>
+
+<script>
+(function () {
+    const list = document.getElementById('metas-list');
+    const addBtn = document.getElementById('add-meta');
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function createMetaNode(value = '') {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'input-group mb-2';
+        wrapper.innerHTML =
+            '<input type="text" name="metas[]" class="form-control" value="' + escapeHtml(value) + '">' +
+            '<div class="btn-group ms-2" role="group" aria-label="Acciones">' +
+                '<button type="button" class="btn btn-outline-secondary btn-sm btn-move-up" title="Subir"><i class="bi bi-chevron-up"></i></button>' +
+                '<button type="button" class="btn btn-outline-secondary btn-sm btn-move-down" title="Bajar"><i class="bi bi-chevron-down"></i></button>' +
+                '<button type="button" class="btn btn-outline-danger btn-sm btn-remove-meta" title="Eliminar"><i class="bi bi-trash"></i></button>' +
+            '</div>';
+        return wrapper;
+    }
+
+    function updateMoveButtons() {
+        const items = Array.from(list.querySelectorAll('.input-group'));
+        items.forEach((item, idx) => {
+            const btnUp = item.querySelector('.btn-move-up');
+            const btnDown = item.querySelector('.btn-move-down');
+            if (btnUp) btnUp.disabled = idx === 0;
+            if (btnDown) btnDown.disabled = idx === items.length - 1;
+        });
+    }
+
+    addBtn.addEventListener('click', function () {
+        const node = createMetaNode('');
+        list.appendChild(node);
+        node.querySelector('input').focus();
+        updateMoveButtons();
+    });
+
+    list.addEventListener('click', function (e) {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const node = btn.closest('.input-group');
+        if (!node) return;
+
+        if (btn.classList.contains('btn-remove-meta')) {
+            node.remove();
+            updateMoveButtons();
+            return;
+        }
+
+        if (btn.classList.contains('btn-move-up')) {
+            const prev = node.previousElementSibling;
+            if (prev) node.parentNode.insertBefore(node, prev);
+            updateMoveButtons();
+            return;
+        }
+
+        if (btn.classList.contains('btn-move-down')) {
+            const next = node.nextElementSibling;
+            if (next) node.parentNode.insertBefore(next, node);
+            updateMoveButtons();
+            return;
+        }
+    });
+
+    // inicializar estado de botones
+    updateMoveButtons();
+})();
+</script>
+{/block}

@@ -8,7 +8,6 @@
     <h5 class="offcanvas-title" id="sidebarMenuLabel">
       <img src="{resolveUploadUrl($sindicato?->logo)}" alt="logo" width="24" height="24"
         class="me-2 rounded-circle object-fit-cover">
-      {$sindicato?->abreviacion}
     </h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu"
       aria-label="Close"></button>
@@ -21,7 +20,6 @@
       <a href="/portal/dashboard/index.php" class="d-flex align-items-center text-white text-decoration-none">
         <img src="{resolveUploadUrl($sindicato?->logo)}" alt="logo" width="50" height="50"
           class="object-fit-cover me-2 rounded-circle">
-        <span class="fs-5 fw-bold">{$sindicato?->nombre}</span>
       </a>
     </div>
 
@@ -64,6 +62,12 @@
         {if in_array('administrador', $roles) || in_array('super_admin', $roles) || in_array('super admin', $roles)}
         <li class="nav-item mt-3 px-3 text-uppercase small text-white-50">
           Administracion
+        </li>
+        <li class="nav-item" data-aos="fade-right" data-aos-delay="450">
+          <a href="/portal/sindicatos/configuracion.php" class="nav-link text-white-50 rounded mx-2 mb-1">
+            <i class="bi bi-sliders me-2"></i>
+            <span>Configuracion</span>
+          </a>
         </li>
         <li class="nav-item" data-aos="fade-right" data-aos-delay="500">
           <a href="/portal/seguridad/permisos.php" class="nav-link text-white-50 rounded mx-2 mb-1">

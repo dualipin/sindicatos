@@ -24,7 +24,6 @@ services:
       - .:/app:Z
     working_dir: /app
 
-
   dbhub:
     image: docker.io/bytebase/dbhub
     ports:
@@ -38,7 +37,6 @@ services:
       - "mysql://root:root@db:3306/my_db"
     depends_on:
       - db
-
 
 volumes:
   db_data:

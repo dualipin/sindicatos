@@ -2,66 +2,86 @@
 
 
 {block main}
-  <section class="about__v4 section" id="about">
-    <div class="container pt-5">
-      <div class="row mb-4">
-        <h1 data-aos="fade-up" data-aos-delay="0" class="text-uppercase fw-bold">
-          Conoce tu Sindicato
-        </h1>
-      </div>
-      <div class="row">
-        <div class="col-md-6 order-md-2">
-          <div class="row justify-content-end">
-            <div class="col-md-11 mb-4 mb-md-0">
-              <span class="subtitle text-uppercase mb-3" data-aos="fade-up" data-aos-delay="0">Sobre Nosotros</span>
-              <h2 class="mb-4" data-aos="fade-up" data-aos-delay="100">MISIÓN</h2>
-              <div data-aos="fade-up" data-aos-delay="200">
-                <p>{$contextoAcerca->datos['mision'] ?? ''}</p>
-              </div>
-              <h2 class="mb-4 mt-5" data-aos="fade-up" data-aos-delay="300">VISIÓN</h2>
-              <div data-aos="fade-up" data-aos-delay="400">
-                <p>{$contextoAcerca->datos['vision'] ?? ''}</p>
-              </div>
-              <h2 class="mb-4 mt-5" data-aos="fade-up" data-aos-delay="500">OBJETIVOS</h2>
-              <div data-aos="fade-up" data-aos-delay="600">
-                <p>{$contextoAcerca->datos['objetivos'] ?? ''}</p>
-              </div>
-              <h2 class="mb-4 mt-5" data-aos="fade-up" data-aos-delay="700">METAS</h2>
-              <h4 class="small fw-bold mt-4 mb-3" data-aos="fade-up" data-aos-delay="800">A CORTO, MEDIANO Y LARGO PLAZO</h4>
-              <ul class="d-flex flex-column list-unstyled gap-2 features" data-aos="fade-up" data-aos-delay="900">
-                {foreach $contextoAcerca->datos['metas'] ?? [] as $meta}
-                  <li><span class="icon rounded-circle text-center"><i class="bi bi-check"></i></span>
-                    {$meta}
-                  </li>
-                {/foreach}
-              </ul>
+<section class="about__v4 section" id="about">
+  <div class="container pt-5">
+    <div class="row mb-4">
+      <h1 data-aos="fade-up" data-aos-delay="0" class="text-uppercase fw-bold">
+        Conoce tu Sindicato
+      </h1>
+    </div>
+    <div class="row">
+      <div class="col-md-6 order-md-2">
+        <div class="row justify-content-end">
+          <div class="col-md-11 mb-4 mb-md-0">
+            <span class="subtitle text-uppercase mb-3" data-aos="fade-up" data-aos-delay="0">Sobre Nosotros</span>
+            <h2 class="mb-4" data-aos="fade-up" data-aos-delay="100">MISIÓN</h2>
+            <div data-aos="fade-up" data-aos-delay="200">
+              <p>{$contextoAcerca->datos['mision'] ?? ''}</p>
             </div>
+            <h2 class="mb-4 mt-5" data-aos="fade-up" data-aos-delay="300">VISIÓN</h2>
+            <div data-aos="fade-up" data-aos-delay="400">
+              <p>{$contextoAcerca->datos['vision'] ?? ''}</p>
+            </div>
+            <h2 class="mb-4 mt-5" data-aos="fade-up" data-aos-delay="500">OBJETIVOS</h2>
+            <div data-aos="fade-up" data-aos-delay="600">
+              <p>{$contextoAcerca->datos['objetivos'] ?? ''}</p>
+            </div>
+            <h2 class="mb-4 mt-5" data-aos="fade-up" data-aos-delay="700">METAS</h2>
+            <h4 class="small fw-bold mt-4 mb-3" data-aos="fade-up" data-aos-delay="800">A CORTO, MEDIANO Y LARGO PLAZO
+            </h4>
+            <ul class="d-flex flex-column list-unstyled gap-2 features" data-aos="fade-up" data-aos-delay="900">
+              {foreach $contextoAcerca->datos['metas'] ?? [] as $meta}
+              <li><span class="icon rounded-circle text-center"><i class="bi bi-check"></i></span>
+                {$meta}
+              </li>
+              {/foreach}
+            </ul>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="img-wrap position-relative">
-            <img class="img-fluid rounded-4" src="/assets/images/about_2-min.jpg" alt="Imagen Sindicato OSTITSM"
-                 data-aos="fade-up" data-aos-delay="0">
-            <div data-aos="fade-up" data-aos-delay="100" class="mt-2 text-center fw-bold">MIDS. Luiz Sosa
-              Castro
-            </div>
-            <div data-aos="fade-up" data-aos-delay="200" class="mt-1 text-center">Secretario General SIUT
-              ITSM
-            </div>
-            <div class="mission-statement p-4 rounded-4 d-flex gap-4" data-aos="fade-up" data-aos-delay="100">
-              <div class="mission-icon text-center rounded-circle text-white"><i
-                        class="bi bi-lightbulb fs-4 text-white"></i></div>
-              <div>
-                <h3 class="text-uppercase fw-bold fs-5 text-white">Compromiso</h3>
-                <p class="fs-6 mb-0">Nuestro compromiso es defender y mejorar las condiciones laborales,
-                  humanas y
-                  sociales de nuestros agremiados, promoviendo la unidad y el respeto en todo
-                  momento.</p>
+      </div>
+      <div class="col-md-6">
+        <div class="img-wrap position-relative">
+          {if !empty($contextoAcerca->comite)}
+          <div class="row row-cols-1 row-cols-sm-2 g-3 mb-3" data-aos="fade-up" data-aos-delay="0">
+            {foreach $contextoAcerca->comite as $miembro}
+            <div class="col">
+              <div class="d-flex align-items-start gap-3 p-3 bg-white rounded-3 shadow-sm h-100">
+                <div class="flex-shrink-0">
+                  {var $fotoPath = $miembro['foto'] ?? $sindicatoActual?->logo}
+                  {if $fotoPath}
+                    <img src="{resolveUploadUrl($fotoPath)}" alt="{$miembro['nombre']}" class="rounded-circle object-fit-cover" width="72" height="72">
+                  {else}
+                    <img src="{resolveUrl('assets/images/logo.jpg')}" alt="{$miembro['nombre']}" class="rounded-circle" width="72" height="72">
+                  {/if}
+                </div>
+                <div class="flex-grow-1 w-100">
+                  <div class="fw-semibold text-break">{$miembro['nombre']}
+                  <div class="small text-muted text-break">{$miembro['puesto'] ?? 'Miembro'}</div>
+                  {if $miembro['biografia']}
+                    <div class="mt-2 small text-muted">{$miembro['biografia']}</div>
+                  {/if}
+                </div>
               </div>
+            </div>
+            {/foreach}
+          </div>
+          {else}
+          <img class="img-fluid rounded-4" src="/assets/images/about_2-min.jpg" alt="Imagen Sindicato"
+            data-aos="fade-up" data-aos-delay="0">
+          {/if}
+
+          <div class="mission-statement p-4 rounded-4 d-flex gap-4 mt-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="mission-icon text-center rounded-circle text-white"><i
+                class="bi bi-lightbulb fs-4 text-white"></i></div>
+            <div>
+              <h3 class="text-uppercase fw-bold fs-5 text-white">Compromiso</h3>
+              <p class="fs-6 mb-0">{$contextoAcerca->datos['compromiso'] ?? 'Nuestro compromiso es defender y mejorar
+                las condiciones de nuestros agremiados.'}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 {/block}

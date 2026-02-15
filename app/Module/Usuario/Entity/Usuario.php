@@ -34,5 +34,6 @@ final readonly class Usuario
         public ?\DateTimeImmutable $fechaCreacion = null,
         public ?\DateTimeImmutable $fechaActualizacion = null,
         public ?\DateTimeImmutable $fechaEliminacion = null,
+        public array $roles = [],
     ) {}
 }

@@ -14,29 +14,28 @@ final readonly class EstablecerSindicatoController
         private TenantContext $tenantContext,
         private SessionManager $sessionManager,
         private Redirector $redirector,
-    ) {
-    }
+    ) {}
 
     public function handle(array $postData): void
     {
         $this->sessionManager->start();
 
-        $id = isset($postData['id']) ? (int)$postData['id'] : 0;
+        $id = isset($postData["id"]) ? (int) $postData["id"] : 0;
 
         if ($id <= 0) {
-            $this->redirector->to('/')->send();
+            $this->redirector->to("/")->send();
             return;
         }
 
         $sindicato = $this->repository->buscarPorIdBasico($id);
 
         if ($sindicato === null) {
-            $this->redirector->to('/')->send();
+            $this->redirector->to("/")->send();
             return;
         }
 
-        $this->tenantContext->setSyndicateId($id);
+        $this->tenantContext->set($id);
 
-        $this->redirector->to('/')->send();
+        $this->redirector->to("/")->send();
     }
 }

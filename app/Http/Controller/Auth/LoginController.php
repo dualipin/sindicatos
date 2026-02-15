@@ -17,11 +17,11 @@ final readonly class LoginController
     ) {}
 
     public function showLoginForm(
-        string $redirectTo = "/",
+        string $redirectTo = "/portal/dashboard",
         ?string $error = null,
     ): void {
         if ($this->authService->estaAutenticado()) {
-            $this->redirector->to("/")->send();
+            $this->redirector->to("/portal/dashboard")->send();
         }
 
         $errorMsg = match ($error) {
@@ -47,7 +47,7 @@ final readonly class LoginController
     public function login(
         string $email,
         string $password,
-        string $redirectTo = "/",
+        string $redirectTo = "/portal/dashboard",
     ): void {
         if ($this->authService->login($email, $password)) {
             // Validate redirect

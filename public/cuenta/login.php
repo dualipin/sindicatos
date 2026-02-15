@@ -17,7 +17,7 @@ $session->start();
 /** @var LoginController $controller */
 $controller = $container->get(LoginController::class);
 
-$redirectTo = $_GET["redirect_to"] ?? ($_POST["redirect"] ?? "/");
+$redirectTo = $_GET["redirect_to"] ?? ($_POST["redirect"] ?? "/portal/dashboard");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"] ?? "";

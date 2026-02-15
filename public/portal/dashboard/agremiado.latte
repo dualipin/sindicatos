@@ -1,0 +1,163 @@
+
+{block title}Mi Dashboard - Agremiado{/block}
+
+{block content}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Bienvenido, {$usuario->nombre}</h1>
+    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#credencialModal">
+        <i class="bi bi-person-badge"></i> Mi Credencial Digital
+    </button>
+</div>
+
+<div class="row mb-4">
+    <!-- Mi Crédito -->
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-wallet2"></i> Mi Crédito
+            </div>
+            <div class="card-body">
+                {if empty($metrics['prestamos'])}
+                    <div class="text-center py-4">
+                        <p class="text-muted">No tienes préstamos activos actualmente.</p>
+                        <a href="/prestamos/solicitar.php" class="btn btn-primary">Solicitar Préstamo</a>
+                    </div>
+                {else}
+                    {foreach $metrics['prestamos'] as $prestamo}
+                        {if $prestamo['estado'] == 'activo'}
+                            <h5 class="card-title">Préstamo Activo #{$prestamo['folio']}</h5>
+                            <div class="row my-3">
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">Saldo Insoluto</small>
+                                    <span class="h3 text-danger">${$prestamo['saldo_pendiente']|number:2}</span>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <small class="text-muted d-block">Próximo Descuento</small>
+                                    <span class="h5">15 de Febrero</span> <!-- Placeholder dinámico -->
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-block">
+                                <a href="/prestamos/detalle.php?id={$prestamo['prestamo_id']}" class="btn btn-outline-secondary btn-sm">Ver Detalle</a>
+                                <a href="/prestamos/corrida.php?id={$prestamo['prestamo_id']}" class="btn btn-outline-success btn-sm"><i class="bi bi-file-earmark-spreadsheet"></i> Descargar Corrida</a>
+                            </div>
+                            <hr>
+                        {/if}
+                    {/foreach}
+                {/if}
+            </div>
+        </div>
+
+        <!-- Noticias -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <i class="bi bi-newspaper"></i> Noticias Recientes
+            </div>
+            <div class="card-body">
+                 <div id="carouselNoticias" class="carousel slide" data-bs-ride="carousel">
+                     <div class="carousel-inner">
+                        {if empty($metrics['noticias'])}
+                            <div class="carousel-item active">
+                                <div class="d-block w-100 bg-light text-center py-5">
+                                    <p class="text-muted">No hay noticias recientes.</p>
+                                </div>
+                            </div>
+                        {else}
+                            {foreach $metrics['noticias'] as $key => $noticia}
+                                <div class="carousel-item {$key === 0 ? 'active' : ''}">
+                                     <div class="d-block w-100 bg-light p-4 rounded">
+                                        <h5>{$noticia['titulo']}</h5>
+                                        <p>{$noticia['resumen']}</p>
+                                        <a href="/noticias/{$noticia['id']}" class="btn btn-sm btn-link">Leer más</a>
+                                     </div>
+                                </div>
+                            {/foreach}
+                         {/if}
+                     </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselNoticias" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselNoticias" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Right -->
+    <div class="col-md-4">
+         <!-- Termómetro Transparencia -->
+        <div class="card shadow-sm mb-4 border-success">
+            <div class="card-body text-center">
+                <h6 class="card-title text-success"><i class="bi bi-shield-check"></i> Transparencia Sindical</h6>
+                <div class="my-3">
+                     <div class="progress" role="progressbar" aria-label="Termómetro" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="height: 25px">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: 90%">90% Cumplimiento</div>
+                    </div>
+                </div>
+                <small class="text-muted">El sindicato está al día con sus obligaciones.</small>
+            </div>
+        </div>
+
+        <!-- Cumpleaños -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <i class="bi bi-balloon-fill text-danger"></i> Cumpleaños de la Semana
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <i class="bi bi-person-circle"></i> Juan Perez <span class="text-muted float-end">Hoy</span>
+                </li>
+                <li class="list-group-item">
+                    <i class="bi bi-person-circle"></i> Maria Lopez <span class="text-muted float-end">Viernes</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Estado Documentos -->
+        <div class="card shadow-sm">
+             <div class="card-header bg-white">
+                <i class="bi bi-folder-check"></i> Mis Documentos
+            </div>
+            <ul class="list-group list-group-flush">
+                 <li class="list-group-item d-flex justify-content-between align-items-center">
+                    INE
+                    <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Comprobante Domicilio
+                    <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
+                </li>
+                 <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Anuencia
+                    <span class="badge bg-warning text-dark rounded-pill">Pendiente</span>
+                </li>
+            </ul>
+             <div class="card-body">
+                <a href="/cuenta/documentos.php" class="btn btn-sm btn-outline-secondary w-100">Gestionar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Credencial -->
+<div class="modal fade" id="credencialModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Credencial Digital</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="/assets/img/credencial_placeholder.png" class="img-fluid rounded shadow" alt="Credencial Digital">
+        <p class="mt-3 text-muted">Válida hasta: Diciembre 2026</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{/block}

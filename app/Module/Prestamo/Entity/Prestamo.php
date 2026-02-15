@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Prestamo;
+namespace App\Module\Prestamo\Entity;
 
 final readonly class Prestamo
 {
@@ -28,7 +28,7 @@ final readonly class Prestamo
         public ?\DateTimeImmutable $fechaValidacionFirmas = null,
         public ?\DateTimeImmutable $fechaDesembolso = null,
         public ?\DateTimeImmutable $fechaLiquidacionTotal = null,
-        public string $estado = 'borrador',
+        public string $estado = "borrador",
         public ?int $prestamoOrigenId = null,
         public ?string $motivoRechazo = null,
         public ?string $observacionesAdmin = null,

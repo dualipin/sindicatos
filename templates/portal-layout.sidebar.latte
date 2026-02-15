@@ -1,4 +1,4 @@
-{var App\Models\Sindicato\Sindicato $sindicato = $sindicatoActual()}
+{var $sindicato = $sindicatoActual ?? null}
 <!-- Sidebar: Offcanvas on mobile, fixed on desktop -->
 <div class="offcanvas-lg offcanvas-start bg-primary text-white" tabindex="-1" id="sidebarMenu"
   aria-labelledby="sidebarMenuLabel" style="width: 280px;">
@@ -6,7 +6,8 @@
   <!-- Offcanvas Header (Mobile only) -->
   <div class="offcanvas-header border-bottom border-secondary d-lg-none">
     <h5 class="offcanvas-title" id="sidebarMenuLabel">
-      <img src="{resolveUploadUrl($sindicato?->logo)}" alt="logo" width="24" height="24" class="me-2 rounded-circle object-fit-cover">
+      <img src="{resolveUploadUrl($sindicato?->logo)}" alt="logo" width="24" height="24"
+        class="me-2 rounded-circle object-fit-cover">
       {$sindicato?->abreviacion}
     </h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu"
@@ -18,7 +19,8 @@
     <!-- Brand (Desktop only) -->
     <div class="d-none d-lg-block p-3 border-bottom border-secondary">
       <a href="/aplicacion/index.php" class="d-flex align-items-center text-white text-decoration-none">
-        <img src="{resolveUploadUrl($sindicato?->logo)}" alt="logo" width="50" height="50" class="object-fit-cover me-2 rounded-circle">
+        <img src="{resolveUploadUrl($sindicato?->logo)}" alt="logo" width="50" height="50"
+          class="object-fit-cover me-2 rounded-circle">
         <span class="fs-5 fw-bold">{$sindicato?->nombre}</span>
       </a>
     </div>

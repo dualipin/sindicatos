@@ -348,6 +348,47 @@ final readonly class SindicatoRepository
     }
 
     /**
+     * Inserta un conjunto de puestos por defecto para el sindicato si la tabla está vacía.
+     */
+    public function insertarPuestosPorDefecto(int $sindicatoId): void
+    {
+        if ($this->contarPuestos($sindicatoId) > 0) {
+            return; // ya existen puestos
+        }
+
+        $puestos = [
+            'Secretario General',
+            'Secretario General Suplente',
+            'Secretario de Organización',
+            'Secretario de Trabajos y Conflictos',
+            'Secretario de Finanzas',
+            'Secretario de Actas y Acuerdos',
+            'Presidente de la Comisión de Honor y Justicia',
+        ];
+
+        $ins = $this->pdo->prepare(
+            'INSERT INTO sindicato_puestos (sindicato_id, nombre_puesto, orden_jerarquico) VALUES (:sindicato_id, :nombre_puesto, :orden_jerarquico)'
+        );
+
+        $this->pdo->beginTransaction();
+        try {
+            $orden = 1;
+            foreach ($puestos as $p) {
+                $ins->execute([
+                    'sindicato_id' => $sindicatoId,
+                    'nombre_puesto' => $p,
+                    'orden_jerarquico' => $orden,
+                ]);
+                $orden++;
+            }
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
      * Sincroniza la lista de integrantes del comité para un sindicato.
      * - Inserta nuevos integrantes
      * - Actualiza los existentes (por integrante_id)

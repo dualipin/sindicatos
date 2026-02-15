@@ -55,6 +55,19 @@ final readonly class ConfiguracionSindicatoController
         $error = null;
 
         if ($method === "POST") {
+            // Importar puestos por defecto (botón en la UI)
+            if (!empty($postData['import_default_puestos'])) {
+                try {
+                    $this->repository->insertarPuestosPorDefecto($sindicatoId);
+                    $this->redirector
+                        ->to('/portal/sindicatos/configuracion.php', ['success' => 'puestos_imported'])
+                        ->send();
+                    return;
+                } catch (\Throwable $e) {
+                    $error = 'No se pudieron importar los puestos por defecto.';
+                }
+            }
+
             $nombre = trim((string) ($postData["nombre"] ?? ""));
             $abreviacion = trim((string) ($postData["abreviacion"] ?? ""));
             $logoPath = $this->normalize($postData["logo_actual"] ?? null);

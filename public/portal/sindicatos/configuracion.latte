@@ -23,6 +23,10 @@
 <div class="alert alert-success" role="alert">Configuracion actualizada correctamente.</div>
 {/if}
 
+{if $success === 'puestos_imported'}
+<div class="alert alert-success" role="alert">Puestos importados correctamente.</div>
+{/if}
+
 {if $error}
 <div class="alert alert-danger" role="alert">{$error}</div>
 {/if}
@@ -173,6 +177,15 @@
             <h5 class="mb-0">Miembros del comité</h5>
         </div>
         <div class="card-body">
+            {if empty($puestosComite)}
+            <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+                <div>No hay puestos definidos para este sindicato.</div>
+                <div>
+                    <button type="submit" name="import_default_puestos" value="1" class="btn btn-sm btn-outline-primary">Cargar puestos por defecto</button>
+                </div>
+            </div>
+            {/if}
+
             <div id="comite-list">
                 {foreach $comite ?? [] as $miembro}
                 <div class="card p-3 mb-2 miembro-item">

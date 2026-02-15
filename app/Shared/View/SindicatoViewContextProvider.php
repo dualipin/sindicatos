@@ -35,27 +35,12 @@ final class SindicatoViewContextProvider extends AbstractViewContextProvider
 
         // Verificar existencia de imagenes en disco y normalizar foto de integrante
         $uploadBase = rtrim($this->settings->upload->publicDir, "/") . "/";
-        $sindicatoLogoPath = null;
-        if (!empty($sindicatoBasic?->logo)) {
-            $candidate = $uploadBase . $sindicatoBasic->logo;
-            if (is_file($candidate)) {
-                $sindicatoLogoPath = $sindicatoBasic->logo;
-            }
-        }
 
-        $normalizedComite = array_map(function ($m) use (
-            $sindicatoLogoPath,
-            $uploadBase,
-        ) {
+        $normalizedComite = array_map(function ($m) use ($uploadBase) {
             $foto = $m["foto"] ?? null;
-            if ($foto) {
-                if (!is_file($uploadBase . $foto)) {
-                    $foto = null; // archivo no existe
-                }
-            }
-
-            if ($foto === null && $sindicatoLogoPath !== null) {
-                $foto = $sindicatoLogoPath;
+            if ($foto && !is_file($uploadBase . $foto)) {
+                // Si el archivo no existe, dejamos foto = null y mostraremos el icono por defecto en la vista
+                $foto = null;
             }
 
             return [

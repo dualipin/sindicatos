@@ -178,23 +178,29 @@ html body li {
 }
 
 .about__v4 .img-wrap .row .col .d-flex {
-    min-height: 84px; /* uniformiza la altura de las tarjetas del comité */
+    min-height: 64px; /* compactar altura de las tarjetas del comité */
+    padding: 0.5rem !important;
+    background: transparent !important; /* apariencia más limpia */
+    box-shadow: none !important;
+    border: 1px solid rgba(0,0,0,0.04);
 }
 
 .about__v4 .img-wrap img.rounded-circle {
-    width: 72px;
-    height: 72px;
+    width: 48px;
+    height: 48px;
     object-fit: cover; /* fallback si .object-fit-cover no aplica */
 }
 
+.avatar-placeholder i { line-height: 1; }
+
 @media (max-width: 575.98px) {
     .about__v4 .img-wrap .row .col {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
     }
 
     .about__v4 .img-wrap .d-flex {
-        padding: 0.65rem;
+        padding: 0.5rem;
     }
 }
 

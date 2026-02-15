@@ -47,13 +47,12 @@
             <div class="col">
               <div class="d-flex align-items-start gap-3 p-3 bg-white rounded-3 shadow-sm">
                 <div class="flex-shrink-0">
-                  {var $fotoPath = $miembro['foto'] ?? $sindicatoActual?->logo}
-                  {if $fotoPath}
-                  <img src="{resolveUploadUrl($fotoPath)}" alt="{$miembro['nombre']}"
-                    class="rounded-circle object-fit-cover" width="72" height="72">
+                  {if $miembro['foto']}
+                    <img src="{resolveUploadUrl($miembro['foto'])}" alt="{$miembro['nombre']}" class="rounded-circle object-fit-cover" width="48" height="48">
                   {else}
-                  <img src="{resolveUrl('assets/images/logo.jpg')}" alt="{$miembro['nombre']}" class="rounded-circle"
-                    width="72" height="72">
+                    <div class="avatar-placeholder rounded-circle d-inline-flex align-items-center justify-content-center bg-light text-secondary" style="width:48px;height:48px;">
+                      <i class="bi bi-person-fill fs-4"></i>
+                    </div>
                   {/if}
                 </div>
                 <div class="flex-grow-1 w-100">
